@@ -89,6 +89,14 @@ const projectsData = [
   },
   {
     id: "3",
+    Title: "My New Portfolio",
+    Description: "A dynamic portfolio built with Next.js, Express.js, and MongoDB, showcasing my journey of learning SSR, API routes, and full-stack integration. Features seamless media handling via Cloudinary and reflects my growth in mastering modern web technologies",
+    Img: "https://res.cloudinary.com/dx5umjy5q/image/upload/v1748264079/rmj2kcbu5gsghmg0mw57.png",
+    Link: "https://github.com/THUNDERBLD/modern-protfolio",
+    TechStack: ["Nextjs", "Nodejs", "MongoDB", "Express", "TailwindCss", "Cloudinary", "Material UI"],
+  },
+  {
+    id: "4",
     Title: "3D Solar System Simulation and Orrery Web App",
     Description: "Created a Solar System Simulation and Orrery Web App using Three.js and the MERN stack. Our app provides a real-time 3D simulation of the solar system, highlighting Near-Earth Objects (NEOs) such as meteors and asteroids. It offers interactive features where users can explore planets and stars, view detailed information, and gain a deeper understanding of the cosmos.",
     Img: "https://res.cloudinary.com/dx5umjy5q/image/upload/v1747245606/pytluwg0ftaulthpkddv.png",
@@ -96,7 +104,7 @@ const projectsData = [
     TechStack: ["React", "Javascript", "Nodejs", "3Js", "Express", "TailwindCss"]
   },
   {
-    id: "4",
+    id: "5",
     Title: "AmazTrade Suite",
     Description: "Indian small and medium-sized businesses (SMBs) face numerous challenges in entering global markets. AmazTrade Suite provides tools to simplify export processes, offering secure and intelligent solutions for businesses.",
     Img: "https://res.cloudinary.com/dx5umjy5q/image/upload/v1747245606/icrc0qx1glkcmlyarz0z.png",
@@ -104,7 +112,7 @@ const projectsData = [
     TechStack: ["React", "TypeScript", "Nodejs", "Netlify", "MongoDB", "Express", "TailwindCss"]
   },
   {
-    id: "5",
+    id: "6",
     Title: "Advista",
     Description: "Advista is your go-to hub for everything gaming and console information. With a sleek, clean design and a user-friendly interface, Advista provides the latest updates, reviews, and insights on all things gaming. Whether you're a casual gamer or a hardcore enthusiast, Advista is here to keep you informed and entertained.",
     Img: "https://res.cloudinary.com/dx5umjy5q/image/upload/v1747245605/mnrvyhb5vyursy8kvhgm.png",
@@ -112,7 +120,7 @@ const projectsData = [
     TechStack: ["React", "Javascript", "Express", "MongoDB", "Vercel", "Nodejs", "TailwindCss"]
   },
   {
-    id: "6",
+    id: "7",
     Title: "Chemical Kinetics Helper GUI Project",
     Description: "The Chemical Kinetics Helper GUI is a dynamic solution crafted with Python's Tkinter for the GUI and Seaborn for advanced graph plotting. Tailored for students, researchers, and professionals, this tool simplifies the intricate world of chemical kinetics by providing an interactive and visually-rich environment for data analysis.",
     Img: "https://res.cloudinary.com/dx5umjy5q/image/upload/v1747245602/y98hv0utav0hhdv9r2nn.png",
@@ -120,7 +128,7 @@ const projectsData = [
     TechStack: ["Python", "Kinter", "Seaborn", "Matplotlib", "ttkbootstrap"]
   },
   {
-    id: "7",
+    id: "8",
     Title: "OXZ-THUNDER",
     Description: "OXZ Thunder is a sleek music streaming web app built with JavaScript. It features real-time audio playback, custom playlists, and a responsive UI, offering a smooth and engaging user experience.",
     Img: "https://res.cloudinary.com/dx5umjy5q/image/upload/v1747247811/svrtuj8aqwvq2yxpfici.png",
@@ -133,7 +141,10 @@ const projectsData = [
 const certificatesData = [
   "https://res.cloudinary.com/dx5umjy5q/image/upload/v1746978681/skv6cmwbtl0hedzgpztf.jpg",
   "https://res.cloudinary.com/dx5umjy5q/image/upload/v1746980730/dxq0hodfdu5rnesorbwh.png",
-  "https://example.com/certificate3.jpg",
+  "https://res.cloudinary.com/dx5umjy5q/image/upload/v1748279088/wjjv7wghakalza13ghan.png",
+  "https://res.cloudinary.com/dx5umjy5q/image/upload/v1748264424/rarhkdwtchm39cuaejpu.png",
+  "https://res.cloudinary.com/dx5umjy5q/image/upload/v1748278709/ofkpptoakgy1bkp7vddc.png",
+  "https://res.cloudinary.com/dx5umjy5q/image/upload/v1748279527/x7tem6ty8t9dil1ch7xy.png",
   // Add more certificates as needed
 ];
 
@@ -236,7 +247,7 @@ export default function FullWidthTabs() {
           </span>
         </h2>
         <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-base mt-2">
-          Explore my journey through projects, certifications, and technical expertise. 
+          Explore my journey through projects, certifications, and technical expertise.
           Each section represents a milestone in my continuous learning path.
         </p>
       </div>

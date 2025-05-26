@@ -142,6 +142,26 @@ const ProjectDetails = () => {
       },
       {
         id: "3",
+        Title: "My New Portfolio",
+        Description: "A dynamic portfolio built with Next.js, Express.js, and MongoDB, showcasing my journey of learning SSR, API routes, and full-stack integration. Features seamless media handling via Cloudinary and reflects my growth in mastering modern web technologies",
+        Img: "https://res.cloudinary.com/dx5umjy5q/image/upload/v1748264079/rmj2kcbu5gsghmg0mw57.png",
+        // Link: "https://github.com/THUNDERBLD/Nasa",
+        TechStack: ["Nextjs", "Nodejs", "MongoDB", "Express", "TailwindCss", "Cloudinary", "Material UI"],
+        Features: [
+          "Server-Side Rendering (SSR) for Faster Load Times",
+          "Dynamic Project Showcase from MongoDB",
+          "Secure Media Uploads via Cloudinary Integration",
+          "API-Driven Content with Express.js & Node.js",
+          "Responsive UI Built with Next.js",
+          "Custom Admin Panel to Manage Projects",
+          "SEO-Friendly Routing and Metadata",
+          "Authentication for Editing Projects (if implemented)",
+          "Lazy Loading & Image Optimization",
+        ],
+        Github: "https://github.com/THUNDERBLD/modern-protfolio"
+      },
+      {
+        id: "4",
         Title: "3D Solar System Simulation and Orrery Web App",
         Description: "Created a Solar System Simulation and Orrery Web App using Three.js and the MERN stack. Our app provides a real-time 3D simulation of the solar system, highlighting Near-Earth Objects (NEOs) such as meteors and asteroids. It offers interactive features where users can explore planets and stars, view detailed information, and gain a deeper understanding of the cosmos.",
         Img: "https://res.cloudinary.com/dx5umjy5q/image/upload/v1747245606/pytluwg0ftaulthpkddv.png",
@@ -158,7 +178,7 @@ const ProjectDetails = () => {
         Github: "https://github.com/THUNDERBLD/Nasa"
       },
       {
-        id: "4",
+        id: "5",
         Title: "AmazTrade Suite",
         Description: "Indian small and medium-sized businesses (SMBs) face numerous challenges in entering global markets. AmazTrade Suite provides tools to simplify export processes, offering secure and intelligent solutions for businesses.",
         Img: "https://res.cloudinary.com/dx5umjy5q/image/upload/v1747245606/icrc0qx1glkcmlyarz0z.png",
@@ -175,7 +195,7 @@ const ProjectDetails = () => {
         Github: "https://github.com/THUNDERBLD/Amazon_Hackathon_Submission"
       },
       {
-        id: "5",
+        id: "6",
         Title: "Advista",
         Description: "Advista is your go-to hub for everything gaming and console information. With a sleek, clean design and a user-friendly interface, Advista provides the latest updates, reviews, and insights on all things gaming. Whether you're a casual gamer or a hardcore enthusiast, Advista is here to keep you informed and entertained.",
         Img: "https://res.cloudinary.com/dx5umjy5q/image/upload/v1747245605/mnrvyhb5vyursy8kvhgm.png",
@@ -192,7 +212,7 @@ const ProjectDetails = () => {
         Github: "https://github.com/THUNDERBLD/Advista"
       },
       {
-        id: "6",
+        id: "7",
         Title: "Chemical Kinetics Helper GUI Project",
         Description: "The Chemical Kinetics Helper GUI is a dynamic solution crafted with Python's Tkinter for the GUI and Seaborn for advanced graph plotting. Tailored for students, researchers, and professionals, this tool simplifies the intricate world of chemical kinetics by providing an interactive and visually-rich environment for data analysis.",
         Img: "https://res.cloudinary.com/dx5umjy5q/image/upload/v1747245602/y98hv0utav0hhdv9r2nn.png",
@@ -209,7 +229,7 @@ const ProjectDetails = () => {
         Github: "https://github.com/THUNDERBLD/GUI"
       },
       {
-        id: "7",
+        id: "8",
         Title: "OXZ-THUNDER",
         Description: "OXZ Thunder is a sleek music streaming web app built with JavaScript. It features real-time audio playback, custom playlists, and a responsive UI, offering a smooth and engaging user experience.",
         Img: "https://res.cloudinary.com/dx5umjy5q/image/upload/v1747247811/svrtuj8aqwvq2yxpfici.png",
@@ -301,22 +321,22 @@ const ProjectDetails = () => {
               <div className="flex flex-wrap gap-3 md:gap-4">
                 {/* Action buttons */}
                 {
-                project.Link ? (
-                <a
-                  href={project.Link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group relative inline-flex items-center space-x-1.5 md:space-x-2 px-4 md:px-8 py-2.5 md:py-4 bg-gradient-to-r from-blue-600/10 to-purple-600/10 hover:from-blue-600/20 hover:to-purple-600/20 text-blue-300 rounded-xl transition-all duration-300 border border-blue-500/20 hover:border-blue-500/40 backdrop-blur-xl overflow-hidden text-sm md:text-base"
-                >
-                  <div className="absolute inset-0 translate-y-[100%] bg-gradient-to-r from-blue-600/10 to-purple-600/10 transition-transform duration-300 group-hover:translate-y-[0%]" />
-                  <ExternalLink className="relative w-4 h-4 md:w-5 md:h-5 group-hover:rotate-12 transition-transform" />
-                  <span className="relative font-medium">Live Demo</span>
-                </a>
-                ) : (
-                  <div className="group cursor-default relative inline-flex items-center space-x-1.5 md:space-x-2 px-4 md:px-8 py-2.5 md:py-4 bg-gradient-to-r from-blue-600/10 to-purple-600/10 hover:from-blue-600/20 hover:to-purple-600/20 text-blue-300 rounded-xl transition-all duration-300 border border-blue-500/20 hover:border-blue-500/40 backdrop-blur-xl overflow-hidden text-sm md:text-base">
-                    <span className="relative font-medium">Not Live</span>
-                  </div>
-                )}
+                  project.Link ? (
+                    <a
+                      href={project.Link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group relative inline-flex items-center space-x-1.5 md:space-x-2 px-4 md:px-8 py-2.5 md:py-4 bg-gradient-to-r from-blue-600/10 to-purple-600/10 hover:from-blue-600/20 hover:to-purple-600/20 text-blue-300 rounded-xl transition-all duration-300 border border-blue-500/20 hover:border-blue-500/40 backdrop-blur-xl overflow-hidden text-sm md:text-base"
+                    >
+                      <div className="absolute inset-0 translate-y-[100%] bg-gradient-to-r from-blue-600/10 to-purple-600/10 transition-transform duration-300 group-hover:translate-y-[0%]" />
+                      <ExternalLink className="relative w-4 h-4 md:w-5 md:h-5 group-hover:rotate-12 transition-transform" />
+                      <span className="relative font-medium">Live Demo</span>
+                    </a>
+                  ) : (
+                    <div className="group cursor-default relative inline-flex items-center space-x-1.5 md:space-x-2 px-4 md:px-8 py-2.5 md:py-4 bg-gradient-to-r from-blue-600/10 to-purple-600/10 hover:from-blue-600/20 hover:to-purple-600/20 text-blue-300 rounded-xl transition-all duration-300 border border-blue-500/20 hover:border-blue-500/40 backdrop-blur-xl overflow-hidden text-sm md:text-base">
+                      <span className="relative font-medium">Not Live</span>
+                    </div>
+                  )}
 
                 <a
                   href={project.Github}
