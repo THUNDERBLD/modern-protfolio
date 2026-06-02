@@ -1,7 +1,163 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ── Cyberpunk Font Utilities ── */
+.font-cyber-title {
+  font-family: "Orbitron", sans-serif;
+}
+.font-cyber-mono {
+  font-family: "Share Tech Mono", monospace;
+}
+.font-cyber-sans {
+  font-family: "Rajdhani", sans-serif;
+}
+
+/* ── Cyberpunk Keyframe Animations ── */
+@keyframes cyber-scan-line {
+  0%   { transform: translateY(-100vh); }
+  100% { transform: translateY(100vh); }
+}
+@keyframes cyber-spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes cyber-spin-reverse {
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg); }
+}
+@keyframes cyber-pulse-glow {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 0.7; }
+}
+@keyframes cyber-dash-march {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -60; }
+}
+@keyframes cyber-glitch-text-kf {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(245,158,11,0.2);
+    transform: translate(0, 0);
+  }
+  92% {
+    text-shadow: 0 0 10px rgba(245,158,11,0.2);
+    transform: translate(0, 0);
+  }
+  93% {
+    text-shadow: 1.5px -1px 0 rgba(239,68,68,0.8), -1.5px 1px 0 rgba(59,130,246,0.8);
+    transform: translate(1px, -0.5px);
+  }
+  94% {
+    text-shadow: -2px 1.5px 0 rgba(239,68,68,0.9), 1.5px -1.5px 0 rgba(59,130,246,0.9);
+    transform: translate(-1px, 0.5px);
+  }
+  95% {
+    text-shadow: 0 0 10px rgba(245,158,11,0.2);
+    transform: translate(0, 0);
+  }
+}
+@keyframes bg-text-glow {
+  0%, 100% {
+    opacity: 0.03;
+    filter: blur(1px);
+  }
+  50% {
+    opacity: 0.06;
+    filter: blur(0px);
+  }
+}
+.animate-cyber-scan {
+  animation: cyber-scan-line 8s linear infinite;
+}
+.animate-cyber-spin-slow {
+  animation: cyber-spin-slow 30s linear infinite;
+}
+.animate-cyber-spin-reverse {
+  animation: cyber-spin-reverse 24s linear infinite;
+}
+.animate-cyber-pulse {
+  animation: cyber-pulse-glow 4s ease-in-out infinite;
+}
+.animate-cyber-dash {
+  animation: cyber-dash-march 3s linear infinite;
+}
+.animate-cyber-glitch-text {
+  animation: cyber-glitch-text-kf 5s steps(1) infinite;
+}
+.animate-bg-text {
+  animation: bg-text-glow 8s ease-in-out infinite;
+}
+
+@keyframes cyber-glitch-1 {
+  0%, 100% {
+    clip-path: inset(100% 0 0 0);
+  }
+  92% {
+    clip-path: inset(100% 0 0 0);
+  }
+  93% {
+    clip-path: inset(20% 0 45% 0);
+    transform: translate(-3px, -1px);
+  }
+  94% {
+    clip-path: inset(70% 0 10% 0);
+    transform: translate(2px, 1px);
+  }
+  95% {
+    clip-path: inset(100% 0 0 0);
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes cyber-glitch-2 {
+  0%, 100% {
+    clip-path: inset(100% 0 0 0);
+  }
+  92% {
+    clip-path: inset(100% 0 0 0);
+  }
+  93% {
+    clip-path: inset(50% 0 20% 0);
+    transform: translate(3px, 1px);
+  }
+  94% {
+    clip-path: inset(10% 0 80% 0);
+    transform: translate(-2px, -1px);
+  }
+  95% {
+    clip-path: inset(100% 0 0 0);
+    transform: translate(0, 0);
+  }
+}
+
+.glitch-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-wrapper::before,
+.glitch-wrapper::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+.glitch-wrapper::before {
+  text-shadow: -2px 0 #00f0ff;
+  animation: cyber-glitch-1 4s infinite linear;
+}
+
+.glitch-wrapper::after {
+  text-shadow: 2px 0 #ff0055;
+  animation: cyber-glitch-2 4s infinite linear;
+}
 
 * {
 	margin: 0;
@@ -48,14 +204,14 @@ body {
 	height: 8px;
 	background-color: transparent;
   }
-  
+
   ::-webkit-scrollbar-track {
 	background: rgba(0, 0, 0, 0.4);
 	backdrop-filter: blur(8px);
 	-webkit-backdrop-filter: blur(8px);
 	border: 1px solid rgba(0, 0, 0, 0.1);
   }
-  
+
   ::-webkit-scrollbar-thumb {
 	background: rgba(0, 0, 0, 0.3);
 	backdrop-filter: blur(4px);
@@ -67,7 +223,7 @@ body {
 	  0 0 10px rgba(0, 0, 0, 0.2);
 	transition: all 0.3s ease;
   }
-  
+
   ::-webkit-scrollbar-thumb:hover {
 	background: rgba(0, 0, 0, 0.5);
 	border: 1px solid rgba(0, 0, 0, 0.3);
@@ -75,7 +231,7 @@ body {
 	  inset 0 0 30px rgba(0, 0, 0, 0.3),
 	  0 0 15px rgba(0, 0, 0, 0.3);
   }
-  
+
   /* When scrollbar is in active/clicked state */
   ::-webkit-scrollbar-thumb:active {
 	background: rgba(0, 0, 0, 0.6);
@@ -84,7 +240,7 @@ body {
 	  inset 0 0 40px rgba(0, 0, 0, 0.4),
 	  0 0 20px rgba(0, 0, 0, 0.4);
   }
-  
+
   ::-webkit-scrollbar-corner {
 	background: transparent;
   }
@@ -92,8 +248,6 @@ body {
   [data-aos] {
 	will-change: transform, opacity !important;
   }
-
-
 
  @keyframes shine {
   from {
@@ -106,3 +260,116 @@ body {
 	 .animate-shine {
    animation: shine 1.5s ease-in-out infinite;
  }
+
+	 @layer base {
+  .theme {
+    --font-heading: var(--font-sans);
+    --font-sans: var(--font-sans);
+  }
+  :root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.708 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+  }
+  .dark {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.205 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.922 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.556 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.556 0 0);
+  }
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* ── Custom Cyberpunk Cursor Hiding ── */
+@media (pointer: fine) {
+  .custom-cyber-cursor-area,
+  .custom-cyber-cursor-area * {
+    cursor: none !important;
+  }
+}
+
+/* ── Lenis Smooth Scrolling CSS ── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overflow: clip;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}

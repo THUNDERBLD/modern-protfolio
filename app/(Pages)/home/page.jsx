@@ -5,36 +5,38 @@ import { Github, Linkedin, Mail, ExternalLink, Instagram, Sparkles } from "lucid
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import { usePortfolioContent } from "@/lib/usePortfolioContent"
+import { visibleItems } from "@/lib/fallbackContent"
 
 // Memoized Components
-const StatusBadge = memo(() => (
+const StatusBadge = memo(({ text }) => (
   <div className="inline-block animate-float lg:mx-0" data-aos="zoom-in" data-aos-delay="400">
     <div className="relative group">
       <div className="absolute -inset-0.5 bg-gradient-to-r from-[#6366f1] to-[#a855f7] rounded-full blur opacity-30 group-hover:opacity-50 transition duration-1000"></div>
       <div className="relative px-3 sm:px-4 py-2 rounded-full bg-black/40 backdrop-blur-xl border border-white/10">
         <span className="bg-gradient-to-r from-[#6366f1] to-[#a855f7] text-transparent bg-clip-text sm:text-sm text-[0.7rem] font-medium flex items-center">
           <Sparkles className="sm:w-4 sm:h-4 w-3 h-3 mr-2 text-blue-400" />
-          Ready to Innovate
+          {text}
         </span>
       </div>
     </div>
   </div>
 ));
 
-const MainTitle = memo(() => (
+const MainTitle = memo(({ titleTop, titleBottom }) => (
   <div className="space-y-2 mt-14" data-aos="fade-up" data-aos-delay="600">
     <h1 className="text-3xl sm:text-4xl md:text-4xl lg:text-4xl xl:text-5xl font-bold tracking-tight">
       <span className="relative inline-block">
         <span className="absolute -inset-2 bg-gradient-to-r from-[#6366f1] to-[#a855f7] blur-2xl opacity-20"></span>
         <span className="relative bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent">
-          Full-Stack
+          {titleTop}
         </span>
       </span>
       <br />
       <span className="relative inline-block mt-2">
         <span className="absolute -inset-2 bg-gradient-to-r from-[#6366f1] to-[#a855f7] blur-2xl opacity-20"></span>
         <span className="relative bg-gradient-to-r from-[#6366f1] to-[#a855f7] bg-clip-text text-transparent">
-          Developer
+          {titleBottom}
         </span>
       </span>
     </h1>
@@ -87,7 +89,24 @@ const SOCIAL_LINKS = [
   { icon: Instagram, link: "https://www.instagram.com/thunder_blood_9/" }
 ];
 
+const SOCIAL_ICONS = {
+  github: Github,
+  linkedin: Linkedin,
+  instagram: Instagram,
+  GitHub: Github,
+  LinkedIn: Linkedin,
+  Instagram: Instagram,
+};
+
 const Home = () => {
+  const { content } = usePortfolioContent();
+  const hero = content.hero || {};
+  const typingWords = hero.typingWords?.length ? hero.typingWords : WORDS;
+  const heroTechStack = hero.techBadges?.length ? hero.techBadges : TECH_STACK;
+  const heroSocialLinks = visibleItems(content.socialLinks).map((link) => ({
+    icon: SOCIAL_ICONS[link.id] || SOCIAL_ICONS[link.name] || Github,
+    link: link.url,
+  }));
   const [text, setText] = useState("")
   const [isTyping, setIsTyping] = useState(true)
   const [wordIndex, setWordIndex] = useState(0)
@@ -118,8 +137,8 @@ const Home = () => {
   // Optimize typing effect
   const handleTyping = useCallback(() => {
     if (isTyping) {
-      if (charIndex < WORDS[wordIndex].length) {
-        setText(prev => prev + WORDS[wordIndex][charIndex]);
+      if (charIndex < typingWords[wordIndex].length) {
+        setText(prev => prev + typingWords[wordIndex][charIndex]);
         setCharIndex(prev => prev + 1);
       } else {
         setTimeout(() => setIsTyping(false), PAUSE_DURATION);
@@ -129,11 +148,11 @@ const Home = () => {
         setText(prev => prev.slice(0, -1));
         setCharIndex(prev => prev - 1);
       } else {
-        setWordIndex(prev => (prev + 1) % WORDS.length);
+        setWordIndex(prev => (prev + 1) % typingWords.length);
         setIsTyping(true);
       }
     }
-  }, [charIndex, isTyping, wordIndex]);
+  }, [charIndex, isTyping, wordIndex, typingWords]);
 
   useEffect(() => {
     const timeout = setTimeout(
@@ -167,7 +186,7 @@ const Home = () => {
               data-aos-delay="200">
               <div className="space-y-4 sm:space-y-6">
               
-                <MainTitle />
+                <MainTitle titleTop={hero.titleTop || "Full-Stack"} titleBottom={hero.titleBottom || "Developer"} />
 
                 {/* Typing Effect */}
                 <div className="h-8 flex items-center" data-aos="fade-up" data-aos-delay="800">
@@ -181,12 +200,12 @@ const Home = () => {
                 <p className="text-base md:text-lg text-gray-400 max-w-xl leading-relaxed font-light"
                   data-aos="fade-up"
                   data-aos-delay="1000">
-                  Software Developer | Proficient in MERN Stack & DevOps | Crafting Quality Web Solutions
+                  {hero.intro || "Software Developer | Proficient in MERN Stack & DevOps | Crafting Quality Web Solutions"}
                 </p>
 
                 {/* Tech Stack */}
                 <div className="flex flex-wrap gap-3 justify-start" data-aos="fade-up" data-aos-delay="1200">
-                  {TECH_STACK.map((tech, index) => (
+                  {heroTechStack.map((tech, index) => (
                     <TechStack key={index} tech={tech} />
                   ))}
                 </div>
@@ -199,11 +218,11 @@ const Home = () => {
 
                 {/* Social Links */}
                 <div className="hidden sm:flex gap-4 justify-start" data-aos="fade-up" data-aos-delay="1600">
-                  {SOCIAL_LINKS.map((social, index) => (
+                  {(heroSocialLinks.length ? heroSocialLinks : SOCIAL_LINKS).map((social, index) => (
                     <SocialLink key={index} {...social} />
                   ))}
                   <div className="my-3 cursor-default">
-                    <StatusBadge />
+                    <StatusBadge text={hero.statusBadge || "Ready to Innovate"} />
                   </div>
                 </div>
               </div>

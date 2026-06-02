@@ -4,6 +4,8 @@ import {
     Instagram,
     ExternalLink
   } from "lucide-react";
+  import { usePortfolioContent } from "@/lib/usePortfolioContent";
+  import { visibleItems } from "@/lib/fallbackContent";
   
   const socialLinks = [
     {
@@ -37,9 +39,13 @@ import {
   ];
   
   const SocialLinks = () => {
-    const linkedIn = socialLinks.find(link => link.isPrimary);
-    const otherLinks = socialLinks.filter(link => !link.isPrimary);
+    const { content } = usePortfolioContent();
+    const links = visibleItems(content.socialLinks).length ? visibleItems(content.socialLinks) : socialLinks;
+    const linkedIn = links.find(link => link.isPrimary) || links[0];
+    const otherLinks = links.filter(link => link.id !== linkedIn.id && link.name !== linkedIn.name);
     const [instagram, github] = otherLinks;
+    const iconMap = { LinkedIn: Linkedin, linkedin: Linkedin, Instagram, instagram: Instagram, GitHub: Github, github: Github };
+    const PrimaryIcon = iconMap[linkedIn.name] || iconMap[linkedIn.id] || Linkedin;
   
     return (
       <div className="w-full bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-6 py-8 backdrop-blur-xl">
@@ -50,7 +56,7 @@ import {
   
         <div className="flex flex-col gap-4">
           {/* LinkedIn - Primary Row */}
-          <a
+          {linkedIn && <a
                 href={linkedIn.url}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -74,7 +80,7 @@ import {
           style={{ backgroundColor: linkedIn.color }}
         />
         <div className="relative p-2 rounded-md">
-          <linkedIn.icon
+          <PrimaryIcon
             className="w-6 h-6 transition-all duration-500 group-hover:scale-105"
             style={{ color: linkedIn.color }}
           />
@@ -106,12 +112,14 @@ import {
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent
                       translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
       </div>
-    </a>
+    </a>}
   
   
           {/* Second Row - Instagram & YouTube */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[instagram, github].map((link) => (
+            {[instagram, github].filter(Boolean).map((link) => {
+              const LinkIcon = iconMap[link.name] || iconMap[link.id] || Github;
+              return (
               <a
                 key={link.name}
                 href={link.url}
@@ -129,7 +137,7 @@ import {
                                  group-hover:scale-125 group-hover:opacity-30"
                        style={{ backgroundColor: link.color }} />
                   <div className="relative p-2 rounded-lg">
-                    <link.icon
+                    <LinkIcon
                       className="w-5 h-5 transition-all duration-500 group-hover:scale-110"
                       style={{ color: link.color }}
                     />
@@ -155,7 +163,7 @@ import {
                                 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                 </div>
               </a>
-            ))}
+            )})}
           </div>
         </div>
       </div>

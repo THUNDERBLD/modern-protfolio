@@ -6,8 +6,11 @@ import SocialLinks from "@/app/_components/SocialLinks";
 import Swal from "sweetalert2";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { usePortfolioContent } from "@/lib/usePortfolioContent";
 
 const page = () => {
+  const { content } = usePortfolioContent();
+  const contact = content.contact || {};
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -96,7 +99,7 @@ const page = () => {
               WebkitTextFillColor: "transparent",
             }}
           >
-            Contact Me
+            {contact.heading || "Contact Me"}
           </span>
         </h2>
         <p
@@ -104,7 +107,7 @@ const page = () => {
           data-aos-duration="1100"
           className="text-slate-400 max-w-2xl mx-auto text-sm md:text-base mt-2"
         >
-          Got a question? Send me a message, and I'll get back to you soon.
+          {contact.subheading || "Got a question? Send me a message, and I'll get back to you soon."}
         </p>
       </div>
 
@@ -120,17 +123,17 @@ const page = () => {
           <div className="flex justify-between items-start mb-8">
             <div>
               <h2 className="text-4xl font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-[#6366f1] to-[#a855f7]">
-                Get in Touch
+                {contact.cardTitle || "Get in Touch"}
               </h2>
               <p className="text-gray-400">
-                Have something to discuss? Send me a message and let's talk.
+                {contact.cardText || "Have something to discuss? Send me a message and let's talk."}
               </p>
             </div>
             <Share2 className="w-10 h-10 text-[#6366f1] opacity-50" />
           </div>
 
           <form 
-            action="https://formsubmit.co/ayanalihaider9@gmail.com" 
+            action={contact.formAction || "https://formsubmit.co/ayanalihaider9@gmail.com"} 
             method="POST"
             onSubmit={handleSubmit}
             className="space-y-6"
