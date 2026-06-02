@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Home from "@/app/(Pages)/home/page"
 import About from "@/app/(Pages)/about/page";
 import Experience from "@/app/(Pages)/experience/page";
@@ -12,10 +12,36 @@ import WelcomeScreen from "@/app/(Pages)/welcome-screen/page";
 import { AnimatePresence } from 'framer-motion';
 import { usePortfolioContent } from "@/lib/usePortfolioContent";
 import CyberpunkPortfolio from "@/app/_themes/cyberpunk/CyberpunkPortfolio";
+import CardtreeWidget from "@/app/_components/CardtreeWidget";
+import Lenis from "lenis";
 
 const page = () => {
     const [showWelcome, setShowWelcome] = useState(true);
     const { content } = usePortfolioContent();
+
+    useEffect(() => {
+        if (showWelcome) return;
+
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            touchMultiplier: 1.5,
+        });
+
+        let rafId;
+        const raf = (time) => {
+            lenis.raf(time);
+            rafId = requestAnimationFrame(raf);
+        };
+        rafId = requestAnimationFrame(raf);
+
+        return () => {
+            lenis.destroy();
+            cancelAnimationFrame(rafId);
+        };
+    }, [showWelcome]);
     
     return (
         <>
@@ -26,6 +52,7 @@ const page = () => {
             </AnimatePresence>
             {!showWelcome && (
                 <>
+                    {content.settings?.cardtreeWidgetEnabled && <CardtreeWidget />}
                     {content.settings?.activeMode === "cyberpunk" ? (
                         <CyberpunkPortfolio content={content} />
                     ) : (

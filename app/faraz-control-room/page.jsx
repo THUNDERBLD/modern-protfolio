@@ -1,10 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { ArrowDown, ArrowUp, Eye, EyeOff, ImagePlus, LogOut, Plus, Save, Trash2 } from "lucide-react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
+import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { ArrowDown, ArrowUp, Eye, EyeOff, ImagePlus, LogOut, Plus, Save, Trash2, X, ZoomIn } from "lucide-react";
 import { fallbackContent, normalizeContent } from "@/lib/fallbackContent";
 
-const sections = ["Modes", "Hero", "About", "Experience", "Projects", "Certificates", "Skills", "Social", "Contact", "Layout"];
+const sections = ["Modes", "Hero", "About", "Experience", "Projects", "Certificates", "Images", "Skills", "Social", "Contact", "Layout"];
 
 const blankProject = () => ({
   id: String(Date.now()),
@@ -93,9 +96,166 @@ const StringListEditor = ({ label, value = [], onChange, placeholder }) => (
   />
 );
 
+const ImageCropperModal = ({ imageSrc, fileName, fileType, onConfirm, onCancel }) => {
+  const imgRef = useRef(null);
+  const [crop, setCrop] = useState();
+  const [completedCrop, setCompletedCrop] = useState();
+  const [aspect, setAspect] = useState(16 / 9);
+
+  const centerAspectCrop = (mediaWidth, mediaHeight, aspectVal) => {
+    if (aspectVal === undefined) {
+      return centerCrop(
+        {
+          unit: "%",
+          width: 80,
+          height: 80,
+        },
+        mediaWidth,
+        mediaHeight
+      );
+    }
+    return centerCrop(
+      makeAspectCrop(
+        {
+          unit: "%",
+          width: 80,
+        },
+        aspectVal,
+        mediaWidth,
+        mediaHeight
+      ),
+      mediaWidth,
+      mediaHeight
+    );
+  };
+
+  const onImageLoad = (e) => {
+    const { width, height } = e.currentTarget;
+    setCrop(centerAspectCrop(width, height, aspect));
+  };
+
+  useEffect(() => {
+    if (imgRef.current) {
+      const { width, height } = imgRef.current;
+      setCrop(centerAspectCrop(width, height, aspect));
+    }
+  }, [aspect]);
+
+  const handleCropSubmit = () => {
+    if (!imgRef.current || !completedCrop) return;
+
+    const image = imgRef.current;
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+
+    canvas.width = completedCrop.width * scaleX;
+    canvas.height = completedCrop.height * scaleY;
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+
+    ctx.drawImage(
+      image,
+      completedCrop.x * scaleX,
+      completedCrop.y * scaleY,
+      completedCrop.width * scaleX,
+      completedCrop.height * scaleY,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          const croppedFile = new File([blob], fileName || "cropped-image.jpg", {
+            type: fileType || "image/jpeg",
+          });
+          onConfirm(croppedFile);
+        }
+      },
+      fileType || "image/jpeg",
+      0.95
+    );
+  };
+
+  return (
+    <Dialog open={true} onOpenChange={(open) => { if (!open) onCancel(); }}>
+      <DialogContent className="sm:max-w-lg bg-[#0c0f12] text-white border-white/10 p-6">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-bold text-white">Adjust and Crop Image</DialogTitle>
+        </DialogHeader>
+
+        <div className="relative mx-auto mt-4 max-h-[350px] overflow-auto bg-black/40 rounded-xl border border-white/10 p-2 flex items-center justify-center">
+          <ReactCrop
+            crop={crop}
+            onChange={(c) => setCrop(c)}
+            onComplete={(c) => setCompletedCrop(c)}
+            aspect={aspect}
+            className="max-h-[330px]"
+          >
+            <img
+              ref={imgRef}
+              src={imageSrc}
+              alt="To Crop"
+              onLoad={onImageLoad}
+              className="max-h-[330px] w-auto object-contain"
+            />
+          </ReactCrop>
+        </div>
+
+        <div className="mt-4 flex items-center justify-between">
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Aspect Ratio:</span>
+          <div className="flex gap-2">
+            {[
+              { label: "Free", value: undefined },
+              { label: "1:1", value: 1 },
+              { label: "16:9", value: 16 / 9 },
+              { label: "4:3", value: 4 / 3 },
+            ].map((ratio, index) => (
+              <button
+                key={index}
+                onClick={() => setAspect(ratio.value)}
+                className={`rounded-lg px-3 py-1 text-xs font-semibold transition ${
+                  aspect === ratio.value ? "bg-purple-600 text-white" : "bg-white/5 text-slate-300 hover:bg-white/10"
+                }`}
+              >
+                {ratio.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <DialogFooter className="mt-6 flex justify-end gap-3 pt-4 border-t border-white/5">
+          <button
+            onClick={onCancel}
+            className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleCropSubmit}
+            disabled={!completedCrop}
+            className="rounded-xl bg-gradient-to-r from-[#6366f1] to-[#a855f7] px-5 py-2.5 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Crop & Upload
+          </button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 const UploadField = ({ label, value, onChange, folder = "modern-portfolio" }) => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [cropImageSrc, setCropImageSrc] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const upload = async (file) => {
     if (!file) return;
@@ -122,6 +282,18 @@ const UploadField = ({ label, value, onChange, folder = "modern-portfolio" }) =>
     setUploading(false);
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setCropImageSrc(reader.result);
+      setSelectedFile(file);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
   return (
     <div className="space-y-3">
       <TextInput label={label} value={value} onChange={(next) => onChange(next)} />
@@ -129,11 +301,27 @@ const UploadField = ({ label, value, onChange, folder = "modern-portfolio" }) =>
         <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10">
           <ImagePlus className="h-4 w-4" />
           {uploading ? "Uploading..." : "Upload Image"}
-          <input type="file" accept="image/*" className="hidden" onChange={(event) => upload(event.target.files?.[0])} />
+          <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
         </label>
-        {value && <img src={value} alt="" className="h-14 w-20 rounded-lg object-cover ring-1 ring-white/10" />}
+        {value && <img src={value} alt="" className="h-24 w-36 rounded-lg object-cover ring-1 ring-white/10" />}
         {error && <span className="text-sm text-red-300">{error}</span>}
       </div>
+      {cropImageSrc && (
+        <ImageCropperModal
+          imageSrc={cropImageSrc}
+          fileName={selectedFile?.name}
+          fileType={selectedFile?.type}
+          onConfirm={(croppedFile) => {
+            upload(croppedFile);
+            setCropImageSrc(null);
+            setSelectedFile(null);
+          }}
+          onCancel={() => {
+            setCropImageSrc(null);
+            setSelectedFile(null);
+          }}
+        />
+      )}
     </div>
   );
 };
@@ -144,6 +332,137 @@ const Panel = ({ title, children }) => (
     <div className="space-y-5">{children}</div>
   </section>
 );
+
+// ─── Lightbox Modal ──────────────────────────────────────────────────────────
+const ImageLightbox = ({ src, alt, onClose }) => {
+  useEffect(() => {
+    const handleEsc = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm" onClick={onClose}>
+      <button onClick={onClose} className="absolute top-4 right-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 transition">
+        <X className="h-6 w-6" />
+      </button>
+      <img
+        src={src}
+        alt={alt || "Preview"}
+        className="max-h-[85vh] max-w-[90vw] rounded-xl object-contain shadow-2xl ring-1 ring-white/20"
+        onClick={(e) => e.stopPropagation()}
+      />
+    </div>
+  );
+};
+
+// ─── Image Card (used inside ImagesPanel) ────────────────────────────────────
+const ImageCard = ({ src, label, sublabel, folder, onUrlChange }) => {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  if (!src) return null;
+
+  return (
+    <>
+      {lightboxOpen && <ImageLightbox src={src} alt={label} onClose={() => setLightboxOpen(false)} />}
+      <div className="group rounded-xl border border-white/10 bg-black/20 overflow-hidden transition hover:border-purple-500/30">
+        <div className="relative cursor-pointer" onClick={() => setLightboxOpen(true)}>
+          <img
+            src={src}
+            alt={label}
+            className="w-full h-48 object-cover transition group-hover:scale-[1.02]"
+          />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/40 transition">
+            <ZoomIn className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition" />
+          </div>
+        </div>
+        <div className="p-3 space-y-2">
+          <p className="text-sm font-semibold text-white truncate">{label}</p>
+          {sublabel && <p className="text-xs text-slate-400 truncate">{sublabel}</p>}
+          <UploadField
+            label=""
+            value={src}
+            folder={folder}
+            onChange={onUrlChange}
+          />
+        </div>
+      </div>
+    </>
+  );
+};
+
+// ─── Images Panel ────────────────────────────────────────────────────────────
+const ImagesPanel = ({ content, updateSection, updateListItem }) => {
+  // Collect all images from content into a flat list for the gallery
+  const allImages = useMemo(() => {
+    const images = [];
+
+    // Profile photo
+    if (content.about?.profilePhotoUrl) {
+      images.push({
+        key: "profile",
+        src: content.about.profilePhotoUrl,
+        label: "Profile Photo",
+        sublabel: "About section",
+        folder: "modern-portfolio/profile",
+        onUrlChange: (url) => updateSection("about", "profilePhotoUrl", url),
+      });
+    }
+
+    // Project screenshots
+    content.projects?.forEach((project) => {
+      if (project.Img) {
+        images.push({
+          key: `project-${project.id}`,
+          src: project.Img,
+          label: project.Title || `Project #${project.id}`,
+          sublabel: "Project screenshot",
+          folder: "modern-portfolio/projects",
+          onUrlChange: (url) => updateListItem("projects", project.id, "Img", url),
+        });
+      }
+    });
+
+    // Certificates
+    content.certificates?.forEach((cert) => {
+      if (cert.imageUrl) {
+        images.push({
+          key: `cert-${cert.id}`,
+          src: cert.imageUrl,
+          label: cert.title || `Certificate #${cert.id}`,
+          sublabel: "Certificate",
+          folder: "modern-portfolio/certificates",
+          onUrlChange: (url) => updateListItem("certificates", cert.id, "imageUrl", url),
+        });
+      }
+    });
+
+    return images;
+  }, [content, updateSection, updateListItem]);
+
+  return (
+    <Panel title="Image Gallery">
+      <p className="text-sm text-slate-400">
+        All images used across your portfolio. Click any image for a full-size preview. Use the upload button below each image to crop and replace it.
+      </p>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {allImages.map((img) => (
+          <ImageCard
+            key={img.key}
+            src={img.src}
+            label={img.label}
+            sublabel={img.sublabel}
+            folder={img.folder}
+            onUrlChange={img.onUrlChange}
+          />
+        ))}
+      </div>
+      {allImages.length === 0 && (
+        <p className="text-sm text-slate-500 text-center py-8">No images found in your portfolio content.</p>
+      )}
+    </Panel>
+  );
+};
 
 export default function AdminDashboardPage() {
   const [content, setContent] = useState(() => normalizeContent(fallbackContent));
@@ -323,7 +642,7 @@ export default function AdminDashboardPage() {
 
           <div className="space-y-6">
             {active === "Modes" && (
-              <Panel title="Portfolio Modes">
+              <Panel title="Portfolio Modes & Integrations">
                 <div className="rounded-xl border border-red-400/20 bg-red-500/5 p-4">
                   <p className="text-sm font-semibold uppercase tracking-[0.2em] text-red-200">Current public mode</p>
                   <div className="mt-4 grid gap-3 md:grid-cols-2">
@@ -340,6 +659,26 @@ export default function AdminDashboardPage() {
                         </span>
                       </button>
                     ))}
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-purple-500/20 bg-purple-500/5 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-purple-200">Cardtree Widget</p>
+                      <p className="mt-1 text-sm text-slate-400 font-sans">
+                        Enable the interactive Cardtree floating chat widget on your portfolio.
+                      </p>
+                    </div>
+                    <label className="relative inline-flex cursor-pointer items-center">
+                      <input
+                        type="checkbox"
+                        checked={Boolean(content.settings?.cardtreeWidgetEnabled)}
+                        onChange={(e) => updateSection("settings", "cardtreeWidgetEnabled", e.target.checked)}
+                        className="peer sr-only"
+                      />
+                      <div className="peer h-6 w-11 rounded-full bg-white/10 after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-purple-600 peer-checked:after:translate-x-full peer-focus:outline-none"></div>
+                    </label>
                   </div>
                 </div>
 
@@ -567,6 +906,10 @@ export default function AdminDashboardPage() {
                   }}
                 />
               </Panel>
+            )}
+
+            {active === "Images" && (
+              <ImagesPanel content={content} updateSection={updateSection} updateListItem={updateListItem} />
             )}
           </div>
         </div>

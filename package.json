@@ -10,6 +10,7 @@
     "hash-admin-password": "node scripts/hash-admin-password.mjs"
   },
   "dependencies": {
+    "@base-ui/react": "^1.5.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@lottiefiles/dotlottie-react": "^0.13.5",
@@ -19,17 +20,24 @@
     "@react-three/fiber": "^9.6.1",
     "aos": "^2.3.4",
     "bcryptjs": "^3.0.3",
+    "class-variance-authority": "^0.7.1",
     "cloudinary": "^2.10.0",
+    "clsx": "^2.1.1",
     "framer-motion": "^12.12.2",
+    "lenis": "^1.3.23",
     "lucide-react": "^0.511.0",
     "mongodb": "^7.2.0",
     "next": "15.1.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-image-crop": "^11.0.10",
     "react-router-dom": "^7.6.1",
+    "shadcn": "^4.10.0",
     "sweetalert2": "^11.21.2",
     "swiper": "^11.2.8",
-    "three": "^0.184.0"
+    "tailwind-merge": "^3.6.0",
+    "three": "^0.184.0",
+    "tw-animate-css": "^1.4.0"
   },
   "devDependencies": {
     "postcss": "^8",

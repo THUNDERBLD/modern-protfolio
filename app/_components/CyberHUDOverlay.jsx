@@ -200,6 +200,54 @@ export default function CyberHUDOverlay() {
           ))}
         </svg>
       </div>
+
+      {/* ─── Massive Stretched Background Brand Text (HAIDER) ─── */}
+      <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+        <h1 
+          className="font-cyber-title font-black uppercase text-[15vw] tracking-[0.25em] text-white/5 animate-bg-text select-none text-center glitch-wrapper"
+          data-text="HAIDER"
+        >
+          HAIDER
+        </h1>
+      </div>
+
+      {/* ─── Floating Skewed Vertical Cyber Column Banner (FARAZ + DEVELOPER) ─── */}
+      <div 
+        className="hidden lg:flex absolute left-[82%] top-[60%] -translate-y-1/2 items-center z-[2] select-none scale-[0.8] xl:scale-[0.95]"
+        style={{ transform: "translateY(-50%) skewX(-15deg)" }}
+      >
+        {/* Diagonal Parallel Skewed Panel Background */}
+        <div className="absolute inset-y-0 -left-6 w-36 flex flex-col justify-between opacity-[0.12] py-2">
+          {Array.from({ length: 7 }).map((_, idx) => (
+            <div 
+              key={idx} 
+              className="h-9 w-full bg-gradient-to-r from-white to-zinc-500 border-l border-white/40"
+              style={{ transform: "skewY(10deg)", margin: "4px 0" }}
+            />
+          ))}
+        </div>
+
+        {/* Large Skewed Gold Stacked Letters (THUNDER) */}
+        <div className="relative font-cyber-title font-black text-5xl xl:text-6xl leading-[0.8] text-amber-400 drop-shadow-[0_0_15px_rgba(245,158,11,0.25)] tracking-tighter flex flex-col select-none">
+          {"THUNDER".split("").map((letter, index) => (
+            <span 
+              key={index} 
+              className="animate-cyber-glitch-text glitch-wrapper" 
+              data-text={letter}
+              style={{ animationDelay: `${0.1 * (index + 1)}s` }}
+            >
+              {letter}
+            </span>
+          ))}
+        </div>
+
+        {/* Small Vertical Letters Column (BLOOD) */}
+        <div className="relative font-cyber-mono text-[11px] tracking-[0.45em] text-white/50 flex flex-col ml-8 uppercase font-black pl-3 border-l-2 border-amber-400/30 select-none justify-between h-[250px] xl:h-[310px] py-2">
+          {"BLOOD".split("").map((char, index) => (
+            <span key={index}>{char}</span>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

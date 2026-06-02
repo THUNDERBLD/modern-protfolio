@@ -1,4 +1,11 @@
 import ProjectDetails from "@/app/_components/ProjectDetails";
+import { fallbackContent } from "@/lib/fallbackContent";
+
+export function generateStaticParams() {
+  return fallbackContent.projects.map((project) => ({
+    ProjectID: [String(project.id)],
+  }));
+}
 
 const page = () => {
 

@@ -23,8 +23,12 @@ export async function POST(request) {
     return NextResponse.json({ message: "Only image uploads are allowed." }, { status: 400 });
   }
 
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const uploaded = await uploadBufferToCloudinary(buffer, folder);
-
-  return NextResponse.json(uploaded);
+  try {
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const uploaded = await uploadBufferToCloudinary(buffer, folder);
+    return NextResponse.json(uploaded);
+  } catch (err) {
+    console.error("Upload error:", err);
+    return NextResponse.json({ message: err.message || "Upload process failed." }, { status: 500 });
+  }
 }
