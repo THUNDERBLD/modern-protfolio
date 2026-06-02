@@ -4,9 +4,11 @@ import React, { useEffect, memo, useMemo } from "react"
 import { FileText, Code, Award, Globe, ArrowUpRight, Sparkles, UserCheck } from "lucide-react"
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import { usePortfolioContent } from "@/lib/usePortfolioContent"
+import { visibleItems } from "@/lib/fallbackContent"
 
 // Memoized Components
-const Header = memo(() => (
+const Header = memo(({ heading, subtitle }) => (
   <div className="text-center lg:mb-6 mb-2 px-[5%]">
     <div className="inline-block relative group">
       <h2 
@@ -14,7 +16,7 @@ const Header = memo(() => (
         data-aos="zoom-in-up"
         data-aos-duration="600"
       >
-        About Me
+        {heading}
       </h2>
     </div>
     <p 
@@ -23,13 +25,13 @@ const Header = memo(() => (
       data-aos-duration="800"
     >
       <Sparkles className="w-5 h-5 text-purple-400" />
-      Transforming ideas into digital experiences
+      {subtitle}
       <Sparkles className="w-5 h-5 text-purple-400" />
     </p>
   </div>
 ));
 
-const ProfileImage = memo(() => (
+const ProfileImage = memo(({ src }) => (
   <div className="flex justify-end items-center sm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2">
     <div 
       className="relative group" 
@@ -52,7 +54,7 @@ const ProfileImage = memo(() => (
           <div className="absolute inset-0 bg-gradient-to-t from-purple-500/20 via-transparent to-blue-500/20 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 hidden sm:block" />
           
           <img
-            src="https://res.cloudinary.com/dx5umjy5q/image/upload/v1748287257/h7elu32z8c9lkrqdilb9.jpg"
+            src={src}
             alt="Profile"
             className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-2"
             loading="lazy"
@@ -115,20 +117,29 @@ const StatCard = memo(({ icon: Icon, color, value, label, description, animation
 ));
 
 const AboutPage = () => {
+  const { content } = usePortfolioContent();
+  const about = content.about || {};
+  const bioLines = about.bio?.length ? about.bio : [
+    "I have a strong foundation in both frontend and backend development, Using these technologies to build scalable and user-friendly web applications.",
+    "I've gained industry experience through 2 internships one is at Banyan Tee, I worked as a frontend developer and mostly my work was focused on react.js and second one is in LetsProgressify, it was a full stack internship and I worked on Nextjs and react flow.",
+    "Additionally, I was a finalist in both the NASA Space Apps Challenge and the Amazon Sambhav Hackathon, demonstrating my problem-solving abilities and passion for technology in the development feild.",
+  ];
+  const projects = visibleItems(content.projects);
+  const certificates = visibleItems(content.certificates);
   // Memoized calculations
   const { totalProjects, totalCertificates, YearExperience } = useMemo(() => {
     
-    const startDate = new Date("2022-11-06");
+    const startDate = new Date(about.experienceStartDate || "2022-11-06");
     const today = new Date();
     const experience = today.getFullYear() - startDate.getFullYear() -
       (today < new Date(today.getFullYear(), startDate.getMonth(), startDate.getDate()) ? 1 : 0);
 
     return {
-      totalProjects: 8,
-      totalCertificates: 6,
+      totalProjects: projects.length,
+      totalCertificates: certificates.length,
       YearExperience: experience
     };
-  }, []);
+  }, [about.experienceStartDate, projects.length, certificates.length]);
 
   // Optimized AOS initialization
   useEffect(() => {
@@ -160,34 +171,34 @@ const AboutPage = () => {
       icon: Code,
       color: "from-[#6366f1] to-[#a855f7]",
       value: totalProjects,
-      label: "Total Projects",
-      description: "Innovative web solutions crafted",
+      label: about.stats?.projectsLabel || "Total Projects",
+      description: about.stats?.projectsDescription || "Innovative web solutions crafted",
       animation: "fade-right",
     },
     {
       icon: Award,
       color: "from-[#a855f7] to-[#6366f1]",
       value: totalCertificates,
-      label: "Certificates",
-      description: "Professional skills validated",
+      label: about.stats?.certificatesLabel || "Certificates",
+      description: about.stats?.certificatesDescription || "Professional skills validated",
       animation: "fade-up",
     },
     {
       icon: Globe,
       color: "from-[#6366f1] to-[#a855f7]",
       value: YearExperience,
-      label: "Years of Experience",
-      description: "Continuous learning journey",
+      label: about.stats?.experienceLabel || "Years of Experience",
+      description: about.stats?.experienceDescription || "Continuous learning journey",
       animation: "fade-left",
     },
-  ], [totalProjects, totalCertificates, YearExperience]);
+  ], [totalProjects, totalCertificates, YearExperience, about.stats]);
 
   return (
     <div
       className="h-auto pb-[10%] text-white bg-black overflow-hidden px-[5%] sm:px-[5%] lg:px-[8%] mt-10 sm-mt-0" 
       id="About"
     >
-      <Header />
+      <Header heading={about.heading || "About Me"} subtitle={about.subtitle || "Transforming ideas into digital experiences"} />
 
       <div className="w-full mx-auto pt-8 sm:pt-12 relative">
         <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
@@ -198,14 +209,14 @@ const AboutPage = () => {
               data-aos-duration="1000"
             >
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6366f1] to-[#a855f7]">
-                Hey, I'm
+                {about.introPrefix || "Hey, I'm"}
               </span>
               <span 
                 className="block mt-2 text-gray-200"
                 data-aos="fade-right"
                 data-aos-duration="1300"
               >
-                Faraz Haider
+                {about.name || "Faraz Haider"}
               </span>
             </h2>
             
@@ -214,13 +225,16 @@ const AboutPage = () => {
               data-aos="fade-right"
               data-aos-duration="1500"
             > 
-              I have a strong foundation in both frontend and backend development, Using these technologies to build scalable and user-friendly web applications. <br />
-              I've gained industry experience through 2 internships one is at Banyan Tee, I worked as a frontend developer and mostly my work was focused on react.js and second one is in LetsProgressify, it was a full stack internship and I worked on Nextjs and react flow. <br />
-              Additionally, I was a finalist in both the NASA Space Apps Challenge and the Amazon Sambhav Hackathon, demonstrating my problem-solving abilities and passion for technology in the development feild.
+              {bioLines.map((line, index) => (
+                <React.Fragment key={index}>
+                  {line}
+                  {index < bioLines.length - 1 && <br />}
+                </React.Fragment>
+              ))}
             </p>
 
             <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 lg:gap-4 lg:px-0 w-full">
-              <a target="_blank" href="https://drive.google.com/file/d/18A2F2xCEBwNrRgTzHsNs2PvuPuLf2hoC/view" className="w-full lg:w-auto">
+              <a target="_blank" href={about.resumeLink || "#"} className="w-full lg:w-auto">
               <button 
                 data-aos="fade-up"
                 data-aos-duration="800"
@@ -241,7 +255,7 @@ const AboutPage = () => {
             </div>
           </div>
 
-          <ProfileImage />
+          <ProfileImage src={about.profilePhotoUrl || "https://res.cloudinary.com/dx5umjy5q/image/upload/v1748287257/h7elu32z8c9lkrqdilb9.jpg"} />
         </div>
 
         <a href="#Portofolio">

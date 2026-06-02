@@ -7,6 +7,8 @@ import {
   ChevronRight, Layers, Layout, Globe, Package, Cpu, Code,
 } from "lucide-react";
 import Swal from 'sweetalert2';
+import { usePortfolioContent } from "@/lib/usePortfolioContent";
+import { visibleItems } from "@/lib/fallbackContent";
 
 const TECH_ICONS = {
   React: Globe,
@@ -99,11 +101,24 @@ const handleGithubClick = (githubLink) => {
 const ProjectDetails = () => {
   const { ProjectID } = useParams();
   const router = useRouter(); // Changed from navigate to router
+  const { content } = usePortfolioContent();
   const [project, setProject] = useState(null);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    const contentProject = visibleItems(content.projects).find((p) => String(p.id) === ProjectID[0]);
+
+    if (contentProject) {
+      setProject({
+        ...contentProject,
+        Features: contentProject.Features || [],
+        TechStack: contentProject.TechStack || [],
+        Github: contentProject.Github || 'https://github.com/THUNDERBLD',
+      });
+      return;
+    }
+
     const storedProjects = [
       {
         id: "1",
@@ -257,7 +272,7 @@ const ProjectDetails = () => {
       };
       setProject(enhancedProject);
     }
-  }, [ProjectID]);
+  }, [ProjectID, content]);
 
   if (!project) {
     return (

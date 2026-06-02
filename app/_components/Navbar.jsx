@@ -2,13 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import { usePortfolioContent } from "@/lib/usePortfolioContent";
 
 const Navbar = () => {
+    const { content } = usePortfolioContent();
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState("Home");
+    const [logoClicks, setLogoClicks] = useState(0);
     
-    const navItems = [
+    const navItems = content.layout?.navItems || [
         { href: "#Home", label: "Home" },
         { href: "#About", label: "About" },
         { href: "#Portofolio", label: "Portofolio" },
@@ -67,6 +70,33 @@ const Navbar = () => {
         setIsOpen(false);
     };
 
+    const handleLogoClick = (e) => {
+        e.preventDefault();
+
+        setLogoClicks((current) => {
+            const nextClicks = current + 1;
+
+            if (nextClicks >= 5) {
+                window.location.href = "/faraz-control-room";
+                return 0;
+            }
+
+            return nextClicks;
+        });
+
+        scrollToSection(e, "#Home");
+    };
+
+    useEffect(() => {
+        if (!logoClicks) return;
+
+        const timer = setTimeout(() => {
+            setLogoClicks(0);
+        }, 1800);
+
+        return () => clearTimeout(timer);
+    }, [logoClicks]);
+
     return (
         <nav
         className={`fixed w-full top-0 z-50 transition-all duration-500 ${
@@ -83,10 +113,10 @@ const Navbar = () => {
                 <div className="flex-shrink-0">
                     <a
                         href="#Home"
-                        onClick={(e) => scrollToSection(e, "#Home")}
+                        onClick={handleLogoClick}
                         className="text-xl font-bold bg-gradient-to-r from-[#a855f7] to-[#6366f1] bg-clip-text text-transparent"
                     >
-                        Faraz Haider
+                        {content.layout?.brandName || "Faraz Haider"}
                     </a>
                 </div>
     

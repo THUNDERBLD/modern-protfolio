@@ -11,7 +11,6 @@ import { useTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import CardProject from "@/app/_components/CardProject";
 import TechStackIcon from "@/app/_components/TechStackIcon";
@@ -19,6 +18,8 @@ import Certificate from "@/app/_components/Certificate";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { Code, Award, Boxes } from "lucide-react";
+import { usePortfolioContent } from "@/lib/usePortfolioContent";
+import { visibleItems } from "@/lib/fallbackContent";
 
 // Separate ShowMore/ShowLess button component
 const ToggleButton = ({ onClick, isShowingMore }) => (
@@ -53,7 +54,7 @@ function TabPanel({ children, value, index, ...other }) {
     >
       {value === index && (
         <Box sx={{ p: { xs: 1, sm: 3 } }}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -185,10 +186,12 @@ const techStacks = [
 
 export default function FullWidthTabs() {
   const theme = useTheme();
+  const { content } = usePortfolioContent();
   const [value, setValue] = useState(0);
   const [swiperInstance, setSwiperInstance] = useState(null);
   const [projects, setProjects] = useState(projectsData);
   const [certificates, setCertificates] = useState(certificatesData);
+  const [skills, setSkills] = useState(techStacks);
   const [showAllProjects, setShowAllProjects] = useState(false);
   const [showAllCertificates, setShowAllCertificates] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -220,6 +223,12 @@ export default function FullWidthTabs() {
       };
     }
   }, []);
+
+  useEffect(() => {
+    setProjects(visibleItems(content.projects));
+    setCertificates(visibleItems(content.certificates).map((certificate) => certificate.imageUrl || certificate));
+    setSkills(visibleItems(content.skills));
+  }, [content]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -256,12 +265,11 @@ export default function FullWidthTabs() {
             backgroundClip: 'text',
             WebkitTextFillColor: 'transparent'
           }}>
-            Portfolio Showcase
+            {content.portfolio?.heading || "Portfolio Showcase"}
           </span>
         </h2>
         <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-base mt-2">
-          Explore my journey through projects, certifications, and technical expertise.
-          Each section represents a milestone in my continuous learning path.
+          {content.portfolio?.subheading || "Explore my journey through projects, certifications, and technical expertise."}
         </p>
       </div>
 
@@ -434,9 +442,9 @@ export default function FullWidthTabs() {
             <TabPanel value={value} index={2} dir={theme.direction}>
               <div className="container mx-auto flex justify-center items-center overflow-hidden pb-[5%]">
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 lg:gap-8 gap-5">
-                  {techStacks.map((stack, index) => (
+                  {skills.map((stack, index) => (
                     <div
-                      key={index}
+                      key={stack.id || index}
                       data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
                       data-aos-duration={index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"}
                     >
