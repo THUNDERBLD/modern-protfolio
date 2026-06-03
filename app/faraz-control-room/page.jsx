@@ -86,15 +86,70 @@ const TextInput = ({ label, value, onChange, multiline = false, type = "text", p
   </label>
 );
 
-const StringListEditor = ({ label, value = [], onChange, placeholder }) => (
-  <TextInput
-    label={label}
-    value={value.join("\n")}
-    multiline
-    onChange={(next) => onChange(next.split("\n").map((item) => item.trim()).filter(Boolean))}
-    placeholder={placeholder}
-  />
-);
+const StringListEditor = ({ label, value = [], onChange, placeholder }) => {
+  const [text, setText] = useState(() => value.join("\n"));
+
+  useEffect(() => {
+    const currentVal = value.join("\n");
+    const normalizedText = text.split("\n").map(s => s.trim()).filter(Boolean).join("\n");
+    if (normalizedText !== currentVal) {
+      setText(currentVal);
+    }
+  }, [value, text]);
+
+  const handleChange = (newVal) => {
+    setText(newVal);
+    const parsed = newVal.split("\n").map((item) => item.trim()).filter(Boolean);
+    onChange(parsed);
+  };
+
+  return (
+    <TextInput
+      label={label}
+      value={text}
+      multiline
+      onChange={handleChange}
+      placeholder={placeholder}
+    />
+  );
+};
+
+const JsonEditor = ({ label, value, onChange, onError, placeholder }) => {
+  const [text, setText] = useState(() => JSON.stringify(value, null, 2));
+
+  useEffect(() => {
+    try {
+      const parsedText = JSON.parse(text);
+      if (JSON.stringify(parsedText) !== JSON.stringify(value)) {
+        setText(JSON.stringify(value, null, 2));
+      }
+    } catch {
+      // In case local text is temporarily invalid, we sync if incoming value changes
+      setText(JSON.stringify(value, null, 2));
+    }
+  }, [value]);
+
+  const handleChange = (newVal) => {
+    setText(newVal);
+    try {
+      const parsed = JSON.parse(newVal);
+      onChange(parsed);
+      if (onError) onError(null);
+    } catch (error) {
+      if (onError) onError("Navigation JSON is invalid.");
+    }
+  };
+
+  return (
+    <TextInput
+      label={label}
+      value={text}
+      multiline
+      onChange={handleChange}
+      placeholder={placeholder}
+    />
+  );
+};
 
 const ImageCropperModal = ({ imageSrc, fileName, fileType, onConfirm, onCancel }) => {
   const imgRef = useRef(null);
@@ -893,17 +948,11 @@ export default function AdminDashboardPage() {
                 <TextInput label="Brand name" value={content.layout.brandName} onChange={(value) => updateSection("layout", "brandName", value)} />
                 <TextInput label="Footer text" value={content.layout.footerText} onChange={(value) => updateSection("layout", "footerText", value)} />
                 <TextInput label="Footer link" value={content.layout.footerLink} onChange={(value) => updateSection("layout", "footerLink", value)} />
-                <TextInput
+                <JsonEditor
                   label="Navigation JSON"
-                  multiline
-                  value={JSON.stringify(content.layout.navItems, null, 2)}
-                  onChange={(value) => {
-                    try {
-                      updateSection("layout", "navItems", JSON.parse(value));
-                    } catch (error) {
-                      setStatus("Navigation JSON is invalid.");
-                    }
-                  }}
+                  value={content.layout.navItems}
+                  onChange={(value) => updateSection("layout", "navItems", value)}
+                  onError={(err) => setStatus(err || "")}
                 />
               </Panel>
             )}
