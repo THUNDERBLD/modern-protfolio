@@ -448,6 +448,114 @@ const ProjectIntelModal = ({ item, index, color = { accent: "#00f0ff", glow: "rg
   );
 };
 
+const CertificateIntelModal = ({ item, index, color = { accent: "#00f0ff", glow: "rgba(0, 240, 255, 0.25)" }, onClose }) => {
+  if (!item) return null;
+
+  return (
+    <motion.div
+      variants={overlayVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      onClick={onClose}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4 backdrop-blur-md cursor-pointer"
+    >
+      <motion.div
+        variants={modalVariants}
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-3xl overflow-hidden border border-white/15 bg-[#070b0c]/98 p-6 md:p-8 text-white select-none cursor-default"
+        style={{
+          clipPath: "polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px))",
+          boxShadow: `0 0 40px ${color.glow}`,
+          borderColor: `${color.accent}30`,
+        }}
+      >
+        {/* Futuristic Grid Scanner Background */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(18,24,27,0.92)_1px,transparent_1px),linear-gradient(90deg,rgba(18,24,27,0.92)_1px,transparent_1px)] bg-[size:10px_10px] opacity-30 pointer-events-none" />
+        
+        {/* Hologram edge overlay pulse lines */}
+        <span className="absolute left-0 top-0 h-[2px] w-[50%] bg-gradient-to-r from-transparent via-[#00f0ff] to-transparent animate-pulse" />
+        <span className="absolute right-0 bottom-0 h-[2px] w-[50%] bg-gradient-to-l from-transparent via-[#ff3b3b] to-transparent animate-pulse" />
+
+        {/* Diagonal Notch Accents */}
+        <span className="absolute right-0 top-0 h-[30px] w-px bg-red-500/40" />
+        <span className="absolute right-0 top-0 h-px w-[30px] bg-red-500/40" />
+        <span className="absolute left-0 bottom-0 h-[30px] w-px bg-red-500/40" />
+        <span className="absolute left-0 bottom-0 h-px w-[30px] bg-red-500/40" />
+
+        {/* Modal Close Icon */}
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 text-zinc-400 hover:text-red-500 hover:rotate-90 transition-all duration-300 z-10"
+        >
+          <X className="h-6 w-6" />
+        </button>
+
+        {/* Modal Content */}
+        <div className="relative flex flex-col gap-5 max-h-[80vh] overflow-y-auto pr-2 custom-scrollbar">
+          
+          {/* Header section */}
+          <motion.div variants={childVariants} className="border-b border-white/10 pb-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span 
+                className="font-cyber-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[#00f0ff] glitch-wrapper"
+                data-text={`CERTIFICATION INTEL // SEC_AUTH_0${index + 1}`}
+              >
+                CERTIFICATION INTEL // SEC_AUTH_0{index + 1}
+              </span>
+              <div className="flex items-center gap-1.5 font-cyber-mono text-[9px] text-zinc-500">
+                <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-ping" />
+                VERIFIED_SECURITY_CREDENTIAL
+              </div>
+            </div>
+
+            <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <h3 className="font-cyber-title mt-1.5 text-2xl font-black uppercase tracking-wide text-white md:text-3xl">
+                  {item.title}
+                </h3>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Certificate Image Viewport */}
+          <motion.div 
+            variants={childVariants} 
+            className="relative w-full overflow-hidden border border-white/10 bg-[#080d0e] flex items-center justify-center p-2"
+            style={{
+              clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))",
+            }}
+          >
+            <img 
+              src={item.imageUrl} 
+              alt={item.title} 
+              className="max-w-full max-h-[55vh] object-contain rounded-md"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(18,24,27,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(18,24,27,0.2)_1px,transparent_1px)] bg-[size:8px_8px] opacity-20 pointer-events-none" />
+          </motion.div>
+
+          {/* Footer action button */}
+          <motion.div variants={childVariants} className="mt-4 flex justify-end">
+            <button
+              onClick={onClose}
+              className="font-cyber-title relative overflow-hidden border border-red-500/30 bg-red-500/10 hover:bg-red-500/25 px-6 py-2.5 text-xs font-bold uppercase tracking-[0.2em] text-red-200 hover:text-white transition-all duration-300 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)]"
+              style={{
+                clipPath: "polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px))",
+                borderColor: `${color.accent}40`,
+                color: color.accent,
+                backgroundColor: `${color.accent}10`,
+              }}
+            >
+              TERMINATE_SESSION //
+            </button>
+          </motion.div>
+          
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const CARD_THEMES = [
   { accent: "#00f0ff", glow: "rgba(0, 240, 255, 0.25)" },  // Neon Cyan
   { accent: "#ff0055", glow: "rgba(255, 0, 85, 0.25)" },   // Neon Magenta
@@ -465,9 +573,13 @@ export default function CyberpunkPortfolio({ content }) {
   const [showAllProjects, setShowAllProjects] = useState(false);
   const [selectedExperience, setSelectedExperience] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [activeTab, setActiveTab] = useState("projects");
+  const [showAllCertificates, setShowAllCertificates] = useState(false);
+  const [selectedCertificate, setSelectedCertificate] = useState(null);
+  const [hoveredCertId, setHoveredCertId] = useState(null);
 
   useEffect(() => {
-    if (selectedExperience || selectedProject) {
+    if (selectedExperience || selectedProject || selectedCertificate) {
       document.documentElement.classList.add("lenis-stopped");
       document.body.style.overflow = "hidden";
     } else {
@@ -478,7 +590,7 @@ export default function CyberpunkPortfolio({ content }) {
       document.documentElement.classList.remove("lenis-stopped");
       document.body.style.overflow = "";
     };
-  }, [selectedExperience, selectedProject]);
+  }, [selectedExperience, selectedProject, selectedCertificate]);
 
   const settings = content.settings?.cyberpunk || {};
   const accent = settings.accentColor || "#ff3b3b";
@@ -489,6 +601,18 @@ export default function CyberpunkPortfolio({ content }) {
   const experiences = visibleItems(content.experiences);
   const skills = visibleItems(content.skills).slice(0, 18);
   const socialLinks = visibleItems(content.socialLinks);
+  const certificates = useMemo(() => {
+    return visibleItems(content.certificates).map((cert) => {
+      if (typeof cert === "string") {
+        return { id: cert, title: "Certificate", imageUrl: cert };
+      }
+      return {
+        id: cert.id || cert.imageUrl,
+        title: cert.title || "Certificate",
+        imageUrl: cert.imageUrl,
+      };
+    });
+  }, [content.certificates]);
   const navItems = useMemo(() => {
     const items = content.layout?.navItems ? [...content.layout.navItems] : [
       { href: "#Home", label: "Home" },
@@ -819,26 +943,419 @@ export default function CyberpunkPortfolio({ content }) {
 
       <section id="Portofolio" className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="Archive" title={content.portfolio?.heading || "Portfolio Showcase"} text={content.portfolio?.subheading} delay={200} />
-        {(() => {
-          const visibleProjects = showAllProjects ? projects : projects.slice(0, 4);
-          const leftColProjects = visibleProjects.slice(0, Math.ceil(visibleProjects.length / 2));
-          const rightColProjects = visibleProjects.slice(Math.ceil(visibleProjects.length / 2));
-          return (
-            <>
-              <div className="grid gap-x-8 gap-y-12 md:grid-cols-2 max-w-5xl mx-auto py-10 px-2">
-                {/* Column 1 */}
-                <div className="flex flex-col gap-8">
-                  {leftColProjects.map((project) => {
-                    const globalIdx = projects.indexOf(project);
-                    const color = CARD_THEMES[globalIdx % CARD_THEMES.length];
-                    const isHovered = hoveredId === project.id;
+        
+        {/* Cybersecurity / Cyberpunk themed Tabs */}
+        <div className="flex justify-center gap-4 mb-10">
+          <button 
+            onClick={() => setActiveTab("projects")}
+            className={`font-cyber-mono relative transform -skew-x-12 px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] transition-all duration-300 border cursor-pointer ${
+              activeTab === "projects"
+                ? "text-white font-black"
+                : "text-zinc-400 hover:text-white border-white/10 hover:border-white/20 bg-white/5"
+            }`}
+            style={{
+              backgroundColor: activeTab === "projects" ? accent : "transparent",
+              borderColor: activeTab === "projects" ? accent : "rgba(255, 255, 255, 0.1)",
+              boxShadow: activeTab === "projects" ? `0 0 15px ${accent}60` : "none",
+            }}
+          >
+            <span className="block transform skew-x-12">
+              // ACTIVE_MISSIONS
+            </span>
+          </button>
+          <button 
+            onClick={() => setActiveTab("certificates")}
+            className={`font-cyber-mono relative transform -skew-x-12 px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] transition-all duration-300 border cursor-pointer ${
+              activeTab === "certificates"
+                ? "text-white font-black"
+                : "text-zinc-400 hover:text-white border-white/10 hover:border-white/20 bg-white/5"
+            }`}
+            style={{
+              backgroundColor: activeTab === "certificates" ? accent : "transparent",
+              borderColor: activeTab === "certificates" ? accent : "rgba(255, 255, 255, 0.1)",
+              boxShadow: activeTab === "certificates" ? `0 0 15px ${accent}60` : "none",
+            }}
+          >
+            <span className="block transform skew-x-12">
+              // SEC_CREDENTIALS
+            </span>
+          </button>
+        </div>
+
+        {activeTab === "projects" ? (
+          (() => {
+            const visibleProjects = showAllProjects ? projects : projects.slice(0, 4);
+            const leftColProjects = visibleProjects.slice(0, Math.ceil(visibleProjects.length / 2));
+            const rightColProjects = visibleProjects.slice(Math.ceil(visibleProjects.length / 2));
+            return (
+              <>
+                <div className="grid gap-x-8 gap-y-12 md:grid-cols-2 max-w-5xl mx-auto py-10 px-2">
+                  {/* Column 1 */}
+                  <div className="flex flex-col gap-8">
+                    {leftColProjects.map((project) => {
+                      const globalIdx = projects.indexOf(project);
+                      const color = CARD_THEMES[globalIdx % CARD_THEMES.length];
+                      const isHovered = hoveredId === project.id;
+                      return (
+                        <div
+                          key={project.id}
+                          onMouseEnter={() => setHoveredId(project.id)}
+                          onMouseLeave={() => setHoveredId(null)}
+                          onClick={() => setSelectedProject({ project, index: globalIdx, color })}
+                          className="relative h-48 overflow-hidden border bg-[#080d0e]/95 transition-all duration-500 hover:scale-[1.02] group cursor-pointer"
+                          style={{
+                            transform: "skewY(-6deg)",
+                            borderColor: isHovered ? color.accent : "rgba(255, 255, 255, 0.12)",
+                            boxShadow: isHovered ? `0 0 25px ${color.glow}` : "none",
+                          }}
+                        >
+                          {/* Left glowing neon colored stripe */}
+                          <span
+                            className="absolute left-0 top-0 h-full w-[4px] transition-all duration-500"
+                            style={{
+                              backgroundColor: color.accent,
+                              boxShadow: isHovered ? `0 0 15px ${color.accent}` : "none",
+                            }}
+                          />
+
+                          {/* Technical corner notches */}
+                          <span className="absolute top-0 right-0 h-2.5 w-2.5 border-t border-r border-white/20" />
+                          <span className="absolute bottom-0 right-0 h-2.5 w-2.5 border-b border-r border-white/20" />
+
+                          {/* Background Image */}
+                          {project.Img && (
+                            <div
+                              className="absolute inset-0 bg-cover bg-center transition-all duration-700 opacity-20 group-hover:opacity-40 group-hover:scale-105"
+                              style={{ backgroundImage: `url(${project.Img})` }}
+                            />
+                          )}
+
+                          {/* Scanline / Grid overlay */}
+                          <div className="absolute inset-0 bg-[linear-gradient(rgba(18,24,27,0.85)_1px,transparent_1px),linear-gradient(90deg,rgba(18,24,27,0.85)_1px,transparent_1px)] bg-[size:8px_8px] opacity-25 pointer-events-none" />
+
+                          {/* Dark/neon dynamic background gradient */}
+                          <div
+                            className="absolute inset-0 transition-all duration-500"
+                            style={{
+                              background: `linear-gradient(90deg, rgba(8,13,14,0.95) 0%, rgba(8,13,14,0.65) 50%, ${isHovered ? color.glow : "rgba(8,13,14,0.2)"} 100%)`,
+                            }}
+                          />
+
+                          {/* Counter-Skewed Content Container */}
+                          <div
+                            className="relative h-full w-full flex flex-col justify-between p-6 transition-all duration-500 select-none"
+                            style={{ transform: "skewY(6deg)" }}
+                          >
+                            <div>
+                              {/* Top indicator tag */}
+                              <div className="flex justify-between items-center">
+                                <span className="font-cyber-mono text-[9px] font-bold uppercase tracking-[0.25em]" style={{ color: color.accent }}>
+                                  SYS_ACTIVE // 0{globalIdx + 1}
+                                </span>
+                                <span className="font-cyber-mono text-[9px] uppercase tracking-wider text-zinc-500">
+                                  GRID_LOCK // 2.7.01
+                                </span>
+                              </div>
+
+                              {/* Project Title */}
+                              <h3 className="font-cyber-title mt-3.5 text-lg font-black uppercase tracking-wide text-white group-hover:text-white transition-colors duration-300">
+                                {project.Title}
+                              </h3>
+
+                              {/* Tech badges */}
+                              <div className="flex flex-wrap gap-1.5 mt-2">
+                                {(project.TechStack || []).slice(0, 3).map((tech) => (
+                                  <span
+                                    key={tech}
+                                    className="font-cyber-mono border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[8px] font-semibold uppercase tracking-wider text-zinc-400"
+                                  >
+                                    {tech}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Bottom: Link Buttons */}
+                            <div className="flex justify-between items-end">
+                              <div className="flex gap-4 font-cyber-mono text-xs">
+                                {project.Link && (
+                                  <a
+                                    href={project.Link}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="font-cyber-mono text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 transition-colors duration-300 hover:text-white"
+                                    style={{ color: color.accent }}
+                                  >
+                                    <ExternalLink className="h-3.5 w-3.5" /> DEMO
+                                  </a>
+                                )}
+                                {project.Github && (
+                                  <a
+                                    href={project.Github}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="font-cyber-mono text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 transition-colors duration-300 hover:text-white"
+                                    style={{ color: color.accent }}
+                                  >
+                                    <Github className="h-3.5 w-3.5" /> SOURCE
+                                  </a>
+                                )}
+                              </div>
+
+                              <span className="font-cyber-mono text-[9px] uppercase text-zinc-500 opacity-60 group-hover:opacity-100 transition-opacity duration-300">
+                                [click for details]
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Absolute Hover specification panel */}
+                          <div
+                            className="absolute inset-0 flex flex-col justify-between p-6 transition-all duration-500 select-none pointer-events-none"
+                            style={{
+                              transform: isHovered ? "skewY(6deg) translateY(0)" : "skewY(6deg) translateY(105%)",
+                              opacity: isHovered ? 1 : 0,
+                              background: `linear-gradient(135deg, rgba(8,13,14,0.98) 0%, ${color.glow} 100%)`,
+                              borderLeft: `3px solid ${color.accent}`,
+                            }}
+                          >
+                            <div>
+                              <p className="font-cyber-mono text-[10px] font-bold uppercase tracking-widest" style={{ color: color.accent }}>
+                                PROJECT_SPECIFICATION //
+                              </p>
+                              <p className="font-cyber-sans mt-3 text-xs leading-relaxed text-zinc-200">
+                                {project.Description}
+                              </p>
+                            </div>
+
+                            <div className="flex justify-between items-center pointer-events-auto">
+                              <span className="font-cyber-mono text-[9px] uppercase text-zinc-500">
+                                [click card for info]
+                              </span>
+                              <div className="flex gap-3">
+                                {project.Link && (
+                                  <a href={project.Link} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:scale-110 transition-transform">
+                                    <ExternalLink className="h-4 w-4" />
+                                  </a>
+                                )}
+                                {project.Github && (
+                                  <a href={project.Github} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:scale-110 transition-transform">
+                                    <Github className="h-4 w-4" />
+                                  </a>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Column 2 */}
+                  <div className="flex flex-col gap-8">
+                    {rightColProjects.map((project) => {
+                      const globalIdx = projects.indexOf(project);
+                      const color = CARD_THEMES[globalIdx % CARD_THEMES.length];
+                      const isHovered = hoveredId === project.id;
+                      return (
+                        <div
+                          key={project.id}
+                          onMouseEnter={() => setHoveredId(project.id)}
+                          onMouseLeave={() => setHoveredId(null)}
+                          onClick={() => setSelectedProject({ project, index: globalIdx, color })}
+                          className="relative h-48 overflow-hidden border bg-[#080d0e]/95 transition-all duration-500 hover:scale-[1.02] group cursor-pointer"
+                          style={{
+                            transform: "skewY(-6deg)",
+                            borderColor: isHovered ? color.accent : "rgba(255, 255, 255, 0.12)",
+                            boxShadow: isHovered ? `0 0 25px ${color.glow}` : "none",
+                          }}
+                        >
+                          {/* Left glowing neon colored stripe */}
+                          <span
+                            className="absolute left-0 top-0 h-full w-[4px] transition-all duration-500"
+                            style={{
+                              backgroundColor: color.accent,
+                              boxShadow: isHovered ? `0 0 15px ${color.accent}` : "none",
+                            }}
+                          />
+
+                          {/* Technical corner notches */}
+                          <span className="absolute top-0 right-0 h-2.5 w-2.5 border-t border-r border-white/20" />
+                          <span className="absolute bottom-0 right-0 h-2.5 w-2.5 border-b border-r border-white/20" />
+
+                          {/* Background Image */}
+                          {project.Img && (
+                            <div
+                              className="absolute inset-0 bg-cover bg-center transition-all duration-700 opacity-20 group-hover:opacity-40 group-hover:scale-105"
+                              style={{ backgroundImage: `url(${project.Img})` }}
+                            />
+                          )}
+
+                          {/* Scanline / Grid overlay */}
+                          <div className="absolute inset-0 bg-[linear-gradient(rgba(18,24,27,0.85)_1px,transparent_1px),linear-gradient(90deg,rgba(18,24,27,0.85)_1px,transparent_1px)] bg-[size:8px_8px] opacity-25 pointer-events-none" />
+
+                          {/* Dark/neon dynamic background gradient */}
+                          <div
+                            className="absolute inset-0 transition-all duration-500"
+                            style={{
+                              background: `linear-gradient(90deg, rgba(8,13,14,0.95) 0%, rgba(8,13,14,0.65) 50%, ${isHovered ? color.glow : "rgba(8,13,14,0.2)"} 100%)`,
+                            }}
+                          />
+
+                          {/* Counter-Skewed Content Container */}
+                          <div
+                            className="relative h-full w-full flex flex-col justify-between p-6 transition-all duration-500 select-none"
+                            style={{ transform: "skewY(6deg)" }}
+                          >
+                            <div>
+                              {/* Top indicator tag */}
+                              <div className="flex justify-between items-center">
+                                <span className="font-cyber-mono text-[9px] font-bold uppercase tracking-[0.25em]" style={{ color: color.accent }}>
+                                  SYS_ACTIVE // 0{globalIdx + 1}
+                                </span>
+                                <span className="font-cyber-mono text-[9px] uppercase tracking-wider text-zinc-500">
+                                  GRID_LOCK // 2.7.01
+                                </span>
+                              </div>
+
+                              {/* Project Title */}
+                              <h3 className="font-cyber-title mt-3.5 text-lg font-black uppercase tracking-wide text-white group-hover:text-white transition-colors duration-300">
+                                {project.Title}
+                              </h3>
+
+                              {/* Tech badges */}
+                              <div className="flex flex-wrap gap-1.5 mt-2">
+                                {(project.TechStack || []).slice(0, 3).map((tech) => (
+                                  <span
+                                    key={tech}
+                                    className="font-cyber-mono border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[8px] font-semibold uppercase tracking-wider text-zinc-400"
+                                  >
+                                    {tech}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Bottom: Link Buttons */}
+                            <div className="flex justify-between items-end">
+                              <div className="flex gap-4 font-cyber-mono text-xs">
+                                {project.Link && (
+                                  <a
+                                    href={project.Link}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="font-cyber-mono text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 transition-colors duration-300 hover:text-white"
+                                    style={{ color: color.accent }}
+                                  >
+                                    <ExternalLink className="h-3.5 w-3.5" /> DEMO
+                                  </a>
+                                )}
+                                {project.Github && (
+                                  <a
+                                    href={project.Github}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="font-cyber-mono text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 transition-colors duration-300 hover:text-white"
+                                    style={{ color: color.accent }}
+                                  >
+                                    <Github className="h-3.5 w-3.5" /> SOURCE
+                                  </a>
+                                )}
+                              </div>
+
+                              <span className="font-cyber-mono text-[9px] uppercase text-zinc-500 opacity-60 group-hover:opacity-100 transition-opacity duration-300">
+                                [click for details]
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Absolute Hover specification panel */}
+                          <div
+                            className="absolute inset-0 flex flex-col justify-between p-6 transition-all duration-500 select-none pointer-events-none"
+                            style={{
+                              transform: isHovered ? "skewY(6deg) translateY(0)" : "skewY(6deg) translateY(105%)",
+                              opacity: isHovered ? 1 : 0,
+                              background: `linear-gradient(135deg, rgba(8,13,14,0.98) 0%, ${color.glow} 100%)`,
+                              borderLeft: `3px solid ${color.accent}`,
+                            }}
+                          >
+                            <div>
+                              <p className="font-cyber-mono text-[10px] font-bold uppercase tracking-widest" style={{ color: color.accent }}>
+                                PROJECT_SPECIFICATION //
+                              </p>
+                              <p className="font-cyber-sans mt-3 text-xs leading-relaxed text-zinc-200">
+                                {project.Description}
+                              </p>
+                            </div>
+
+                            <div className="flex justify-between items-center pointer-events-auto">
+                              <span className="font-cyber-mono text-[9px] uppercase text-zinc-500">
+                                [click card for info]
+                              </span>
+                              <div className="flex gap-3">
+                                {project.Link && (
+                                  <a href={project.Link} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:scale-110 transition-transform">
+                                    <ExternalLink className="h-4 w-4" />
+                                  </a>
+                                )}
+                                {project.Github && (
+                                  <a href={project.Github} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:scale-110 transition-transform">
+                                    <Github className="h-4 w-4" />
+                                  </a>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {projects.length > 4 && (
+                  <div className="mt-8 flex justify-center">
+                    <button
+                      onClick={() => {
+                        setShowAllProjects(!showAllProjects);
+                        setTimeout(() => {
+                          window.dispatchEvent(new Event("resize"));
+                        }, 80);
+                      }}
+                      className="font-cyber-title relative overflow-hidden border border-[#00f0ff]/30 bg-[#080d0e]/60 px-8 py-3.5 text-xs font-bold uppercase tracking-[0.25em] text-[#00f0ff] transition-all duration-300 hover:border-[#00f0ff] hover:bg-[#00f0ff]/15 hover:text-white hover:shadow-[0_0_20px_rgba(0,240,255,0.3)] active:scale-95 cursor-pointer"
+                      style={{
+                        clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))",
+                        borderColor: `${accent}40`,
+                        color: accent,
+                      }}
+                    >
+                      <span className="flex items-center gap-2 font-black">
+                        {showAllProjects ? "COLLAPSE ARCHIVE // <<" : "LOAD MORE INTEL // >>"}
+                      </span>
+                    </button>
+                  </div>
+                )}
+              </>
+            );
+          })()
+        ) : (
+          (() => {
+            const visibleCertificates = showAllCertificates ? certificates : certificates.slice(0, 6);
+            return (
+              <>
+                <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 max-w-5xl mx-auto py-10 px-2">
+                  {visibleCertificates.map((cert, index) => {
+                    const color = CARD_THEMES[index % CARD_THEMES.length];
+                    const isHovered = hoveredCertId === cert.id;
                     return (
                       <div
-                        key={project.id}
-                        onMouseEnter={() => setHoveredId(project.id)}
-                        onMouseLeave={() => setHoveredId(null)}
-                        onClick={() => setSelectedProject({ project, index: globalIdx, color })}
-                        className="relative h-48 overflow-hidden border bg-[#080d0e]/95 transition-all duration-500 hover:scale-[1.02] group cursor-pointer"
+                        key={cert.id}
+                        onMouseEnter={() => setHoveredCertId(cert.id)}
+                        onMouseLeave={() => setHoveredCertId(null)}
+                        onClick={() => setSelectedCertificate({ cert, index, color })}
+                        className="relative overflow-hidden border bg-[#080d0e]/95 transition-all duration-500 hover:scale-[1.02] group cursor-pointer"
                         style={{
                           transform: "skewY(-6deg)",
                           borderColor: isHovered ? color.accent : "rgba(255, 255, 255, 0.12)",
@@ -859,128 +1376,49 @@ export default function CyberpunkPortfolio({ content }) {
                         <span className="absolute bottom-0 right-0 h-2.5 w-2.5 border-b border-r border-white/20" />
 
                         {/* Background Image */}
-                        {project.Img && (
-                          <div
-                            className="absolute inset-0 bg-cover bg-center transition-all duration-700 opacity-20 group-hover:opacity-40 group-hover:scale-105"
-                            style={{ backgroundImage: `url(${project.Img})` }}
-                          />
+                        {cert.imageUrl && (
+                          <div className="relative aspect-video w-full overflow-hidden border-b border-white/10 bg-[#080d0e]">
+                            <div
+                              className="absolute inset-0 bg-cover bg-center transition-all duration-700 opacity-60 group-hover:opacity-90 group-hover:scale-105"
+                              style={{ backgroundImage: `url(${cert.imageUrl})` }}
+                            />
+                            <div className="absolute inset-0 bg-[linear-gradient(rgba(18,24,27,0.4)_1px,transparent_1px),linear-gradient(90deg,rgba(18,24,27,0.4)_1px,transparent_1px)] bg-[size:8px_8px] opacity-25 pointer-events-none" />
+                          </div>
                         )}
-
-                        {/* Scanline / Grid overlay */}
-                        <div className="absolute inset-0 bg-[linear-gradient(rgba(18,24,27,0.85)_1px,transparent_1px),linear-gradient(90deg,rgba(18,24,27,0.85)_1px,transparent_1px)] bg-[size:8px_8px] opacity-25 pointer-events-none" />
-
-                        {/* Dark/neon dynamic background gradient */}
-                        <div
-                          className="absolute inset-0 transition-all duration-500"
-                          style={{
-                            background: `linear-gradient(90deg, rgba(8,13,14,0.95) 0%, rgba(8,13,14,0.65) 50%, ${isHovered ? color.glow : "rgba(8,13,14,0.2)"} 100%)`,
-                          }}
-                        />
 
                         {/* Counter-Skewed Content Container */}
                         <div
-                          className="relative h-full w-full flex flex-col justify-between p-6 transition-all duration-500 select-none"
+                          className="relative flex flex-col justify-between p-4 transition-all duration-500 select-none"
                           style={{ transform: "skewY(6deg)" }}
                         >
                           <div>
                             {/* Top indicator tag */}
                             <div className="flex justify-between items-center">
-                              <span className="font-cyber-mono text-[9px] font-bold uppercase tracking-[0.25em]" style={{ color: color.accent }}>
-                                SYS_ACTIVE // 0{globalIdx + 1}
+                              <span className="font-cyber-mono text-[8px] font-bold uppercase tracking-[0.25em]" style={{ color: color.accent }}>
+                                SEC_VERIFIED // 0{index + 1}
                               </span>
-                              <span className="font-cyber-mono text-[9px] uppercase tracking-wider text-zinc-500">
-                                GRID_LOCK // 2.7.01
+                              <span className="font-cyber-mono text-[8px] uppercase tracking-wider text-zinc-500">
+                                AUTH_DONE
                               </span>
                             </div>
 
-                            {/* Project Title */}
-                            <h3 className="font-cyber-title mt-3.5 text-lg font-black uppercase tracking-wide text-white group-hover:text-white transition-colors duration-300">
-                              {project.Title}
+                            {/* Certificate Title */}
+                            <h3 className="font-cyber-title mt-2 text-sm font-black uppercase tracking-wide text-white transition-colors duration-300">
+                              {cert.title}
                             </h3>
-
-                            {/* Tech badges */}
-                            <div className="flex flex-wrap gap-1.5 mt-2">
-                              {(project.TechStack || []).slice(0, 3).map((tech) => (
-                                <span
-                                  key={tech}
-                                  className="font-cyber-mono border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[8px] font-semibold uppercase tracking-wider text-zinc-400"
-                                >
-                                  {tech}
-                                </span>
-                              ))}
-                            </div>
                           </div>
 
-                          {/* Bottom: Link Buttons */}
-                          <div className="flex justify-between items-end">
-                            <div className="flex gap-4 font-cyber-mono text-xs">
-                              {project.Link && (
-                                <a
-                                  href={project.Link}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  onClick={(e) => e.stopPropagation()}
-                                  className="font-cyber-mono text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 transition-colors duration-300 hover:text-white"
-                                  style={{ color: color.accent }}
-                                >
-                                  <ExternalLink className="h-3.5 w-3.5" /> DEMO
-                                </a>
-                              )}
-                              {project.Github && (
-                                <a
-                                  href={project.Github}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  onClick={(e) => e.stopPropagation()}
-                                  className="font-cyber-mono text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 transition-colors duration-300 hover:text-white"
-                                  style={{ color: color.accent }}
-                                >
-                                  <Github className="h-3.5 w-3.5" /> SOURCE
-                                </a>
-                              )}
-                            </div>
-
-                            <span className="font-cyber-mono text-[9px] uppercase text-zinc-500 opacity-60 group-hover:opacity-100 transition-opacity duration-300">
-                              [click for details]
+                          {/* Bottom action link */}
+                          <div className="flex justify-between items-center mt-4">
+                            <span 
+                              className="font-cyber-mono text-[9px] font-bold uppercase tracking-widest flex items-center gap-1 transition-colors duration-300"
+                              style={{ color: color.accent }}
+                            >
+                              <ExternalLink className="h-3 w-3" /> VIEW INTEL
                             </span>
-                          </div>
-                        </div>
-
-                        {/* Absolute Hover specification panel */}
-                        <div
-                          className="absolute inset-0 flex flex-col justify-between p-6 transition-all duration-500 select-none pointer-events-none"
-                          style={{
-                            transform: isHovered ? "skewY(6deg) translateY(0)" : "skewY(6deg) translateY(105%)",
-                            opacity: isHovered ? 1 : 0,
-                            background: `linear-gradient(135deg, rgba(8,13,14,0.98) 0%, ${color.glow} 100%)`,
-                            borderLeft: `3px solid ${color.accent}`,
-                          }}
-                        >
-                          <div>
-                            <p className="font-cyber-mono text-[10px] font-bold uppercase tracking-widest" style={{ color: color.accent }}>
-                              PROJECT_SPECIFICATION //
-                            </p>
-                            <p className="font-cyber-sans mt-3 text-xs leading-relaxed text-zinc-200">
-                              {project.Description}
-                            </p>
-                          </div>
-
-                          <div className="flex justify-between items-center pointer-events-auto">
-                            <span className="font-cyber-mono text-[9px] uppercase text-zinc-500">
-                              [click card for info]
+                            <span className="font-cyber-mono text-[8px] uppercase text-zinc-500 opacity-60 group-hover:opacity-100 transition-opacity duration-300">
+                              [click to scan]
                             </span>
-                            <div className="flex gap-3">
-                              {project.Link && (
-                                <a href={project.Link} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:scale-110 transition-transform">
-                                  <ExternalLink className="h-4 w-4" />
-                                </a>
-                              )}
-                              {project.Github && (
-                                <a href={project.Github} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:scale-110 transition-transform">
-                                  <Github className="h-4 w-4" />
-                                </a>
-                              )}
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -988,192 +1426,32 @@ export default function CyberpunkPortfolio({ content }) {
                   })}
                 </div>
 
-                {/* Column 2 */}
-                <div className="flex flex-col gap-8">
-                  {rightColProjects.map((project) => {
-                    const globalIdx = projects.indexOf(project);
-                    const color = CARD_THEMES[globalIdx % CARD_THEMES.length];
-                    const isHovered = hoveredId === project.id;
-                    return (
-                      <div
-                        key={project.id}
-                        onMouseEnter={() => setHoveredId(project.id)}
-                        onMouseLeave={() => setHoveredId(null)}
-                        onClick={() => setSelectedProject({ project, index: globalIdx, color })}
-                        className="relative h-48 overflow-hidden border bg-[#080d0e]/95 transition-all duration-500 hover:scale-[1.02] group cursor-pointer"
-                        style={{
-                          transform: "skewY(-6deg)",
-                          borderColor: isHovered ? color.accent : "rgba(255, 255, 255, 0.12)",
-                          boxShadow: isHovered ? `0 0 25px ${color.glow}` : "none",
-                        }}
-                      >
-                        {/* Left glowing neon colored stripe */}
-                        <span
-                          className="absolute left-0 top-0 h-full w-[4px] transition-all duration-500"
-                          style={{
-                            backgroundColor: color.accent,
-                            boxShadow: isHovered ? `0 0 15px ${color.accent}` : "none",
-                          }}
-                        />
-
-                        {/* Technical corner notches */}
-                        <span className="absolute top-0 right-0 h-2.5 w-2.5 border-t border-r border-white/20" />
-                        <span className="absolute bottom-0 right-0 h-2.5 w-2.5 border-b border-r border-white/20" />
-
-                        {/* Background Image */}
-                        {project.Img && (
-                          <div
-                            className="absolute inset-0 bg-cover bg-center transition-all duration-700 opacity-20 group-hover:opacity-40 group-hover:scale-105"
-                            style={{ backgroundImage: `url(${project.Img})` }}
-                          />
-                        )}
-
-                        {/* Scanline / Grid overlay */}
-                        <div className="absolute inset-0 bg-[linear-gradient(rgba(18,24,27,0.85)_1px,transparent_1px),linear-gradient(90deg,rgba(18,24,27,0.85)_1px,transparent_1px)] bg-[size:8px_8px] opacity-25 pointer-events-none" />
-
-                        {/* Dark/neon dynamic background gradient */}
-                        <div
-                          className="absolute inset-0 transition-all duration-500"
-                          style={{
-                            background: `linear-gradient(90deg, rgba(8,13,14,0.95) 0%, rgba(8,13,14,0.65) 50%, ${isHovered ? color.glow : "rgba(8,13,14,0.2)"} 100%)`,
-                          }}
-                        />
-
-                        {/* Counter-Skewed Content Container */}
-                        <div
-                          className="relative h-full w-full flex flex-col justify-between p-6 transition-all duration-500 select-none"
-                          style={{ transform: "skewY(6deg)" }}
-                        >
-                          <div>
-                            {/* Top indicator tag */}
-                            <div className="flex justify-between items-center">
-                              <span className="font-cyber-mono text-[9px] font-bold uppercase tracking-[0.25em]" style={{ color: color.accent }}>
-                                SYS_ACTIVE // 0{globalIdx + 1}
-                              </span>
-                              <span className="font-cyber-mono text-[9px] uppercase tracking-wider text-zinc-500">
-                                GRID_LOCK // 2.7.01
-                              </span>
-                            </div>
-
-                            {/* Project Title */}
-                            <h3 className="font-cyber-title mt-3.5 text-lg font-black uppercase tracking-wide text-white group-hover:text-white transition-colors duration-300">
-                              {project.Title}
-                            </h3>
-
-                            {/* Tech badges */}
-                            <div className="flex flex-wrap gap-1.5 mt-2">
-                              {(project.TechStack || []).slice(0, 3).map((tech) => (
-                                <span
-                                  key={tech}
-                                  className="font-cyber-mono border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[8px] font-semibold uppercase tracking-wider text-zinc-400"
-                                >
-                                  {tech}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Bottom: Link Buttons */}
-                          <div className="flex justify-between items-end">
-                            <div className="flex gap-4 font-cyber-mono text-xs">
-                              {project.Link && (
-                                <a
-                                  href={project.Link}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  onClick={(e) => e.stopPropagation()}
-                                  className="font-cyber-mono text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 transition-colors duration-300 hover:text-white"
-                                  style={{ color: color.accent }}
-                                >
-                                  <ExternalLink className="h-3.5 w-3.5" /> DEMO
-                                </a>
-                              )}
-                              {project.Github && (
-                                <a
-                                  href={project.Github}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  onClick={(e) => e.stopPropagation()}
-                                  className="font-cyber-mono text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 transition-colors duration-300 hover:text-white"
-                                  style={{ color: color.accent }}
-                                >
-                                  <Github className="h-3.5 w-3.5" /> SOURCE
-                                </a>
-                              )}
-                            </div>
-
-                            <span className="font-cyber-mono text-[9px] uppercase text-zinc-500 opacity-60 group-hover:opacity-100 transition-opacity duration-300">
-                              [click for details]
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Absolute Hover specification panel */}
-                        <div
-                          className="absolute inset-0 flex flex-col justify-between p-6 transition-all duration-500 select-none pointer-events-none"
-                          style={{
-                            transform: isHovered ? "skewY(6deg) translateY(0)" : "skewY(6deg) translateY(105%)",
-                            opacity: isHovered ? 1 : 0,
-                            background: `linear-gradient(135deg, rgba(8,13,14,0.98) 0%, ${color.glow} 100%)`,
-                            borderLeft: `3px solid ${color.accent}`,
-                          }}
-                        >
-                          <div>
-                            <p className="font-cyber-mono text-[10px] font-bold uppercase tracking-widest" style={{ color: color.accent }}>
-                              PROJECT_SPECIFICATION //
-                            </p>
-                            <p className="font-cyber-sans mt-3 text-xs leading-relaxed text-zinc-200">
-                              {project.Description}
-                            </p>
-                          </div>
-
-                          <div className="flex justify-between items-center pointer-events-auto">
-                            <span className="font-cyber-mono text-[9px] uppercase text-zinc-500">
-                              [click card for info]
-                            </span>
-                            <div className="flex gap-3">
-                              {project.Link && (
-                                <a href={project.Link} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:scale-110 transition-transform">
-                                  <ExternalLink className="h-4 w-4" />
-                                </a>
-                              )}
-                              {project.Github && (
-                                <a href={project.Github} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:scale-110 transition-transform">
-                                  <Github className="h-4 w-4" />
-                                </a>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {projects.length > 4 && (
-                <div className="mt-8 flex justify-center">
-                  <button
-                    onClick={() => {
-                      setShowAllProjects(!showAllProjects);
-                      setTimeout(() => {
-                        window.dispatchEvent(new Event("resize"));
-                      }, 80);
-                    }}
-                    className="font-cyber-title relative overflow-hidden border border-[#00f0ff]/30 bg-[#080d0e]/60 px-8 py-3.5 text-xs font-bold uppercase tracking-[0.25em] text-[#00f0ff] transition-all duration-300 hover:border-[#00f0ff] hover:bg-[#00f0ff]/15 hover:text-white hover:shadow-[0_0_20px_rgba(0,240,255,0.3)] active:scale-95 cursor-pointer"
-                    style={{
-                      clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))",
-                    }}
-                  >
-                    <span className="flex items-center gap-2 font-black">
-                      {showAllProjects ? "COLLAPSE ARCHIVE // <<" : "LOAD MORE INTEL // >>"}
-                    </span>
-                  </button>
-                </div>
-              )}
-            </>
-          );
-        })()}
+                {certificates.length > 6 && (
+                  <div className="mt-8 flex justify-center">
+                    <button
+                      onClick={() => {
+                        setShowAllCertificates(!showAllCertificates);
+                        setTimeout(() => {
+                          window.dispatchEvent(new Event("resize"));
+                        }, 80);
+                      }}
+                      className="font-cyber-title relative overflow-hidden border border-[#00f0ff]/30 bg-[#080d0e]/60 px-8 py-3.5 text-xs font-bold uppercase tracking-[0.25em] text-[#00f0ff] transition-all duration-300 hover:border-[#00f0ff] hover:bg-[#00f0ff]/15 hover:text-white hover:shadow-[0_0_20px_rgba(0,240,255,0.3)] active:scale-95 cursor-pointer"
+                      style={{
+                        clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))",
+                        borderColor: `${accent}40`,
+                        color: accent,
+                      }}
+                    >
+                      <span className="flex items-center gap-2 font-black">
+                        {showAllCertificates ? "COLLAPSE ARCHIVE // <<" : "LOAD MORE CREDENTIALS // >>"}
+                      </span>
+                    </button>
+                  </div>
+                )}
+              </>
+            );
+          })()
+        )}
       </section>
 
       <section id="Skills" className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
@@ -1236,6 +1514,14 @@ export default function CyberpunkPortfolio({ content }) {
             index={selectedProject.index}
             color={selectedProject.color}
             onClose={() => setSelectedProject(null)}
+          />
+        )}
+        {selectedCertificate && (
+          <CertificateIntelModal
+            item={selectedCertificate.cert}
+            index={selectedCertificate.index}
+            color={selectedCertificate.color}
+            onClose={() => setSelectedCertificate(null)}
           />
         )}
       </AnimatePresence>
